@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#173F7A">
+<meta name="theme-color" content="#F5F3EF">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="내 장부">
@@ -11,849 +11,1151 @@
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icon-180.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;800&family=Noto+Serif+KR:wght@600;700&display=swap" rel="stylesheet">
 <style>
 :root{
-  --bg:#F4F6F9; --card:#FFFFFF; --ink:#0E1726; --sub:#4B5565; --mute:#6B7280; --line:#E3E7EE;
-  --pri:#173F7A; --pri-soft:#E8EEF8;
-  --plus:#0B6B4F; --plus-soft:#E6F4EE; --minus:#B3401F; --minus-soft:#FBECE6; --fix:#5B3E96; --fix-soft:#EFEAF8;
-  --ok:#0B6B4F; --part:#8A5A00; --no:#9A3412;
-  --r:14px;
+  --bg:#F5F3EF; --card:#FFFFFF; --ink:#1C1C1E; --sub:#636366; --mute:#8E8E93; --line:#ECE9E3; --soft:#F2F0EB;
+  --gold:#B8862B; --gold2:#E2B95A; --gold-soft:#FBF3E2;
+  --night:#161927; --night2:#262B40;
+  --inc:#1E9E6A; --inc-soft:#E7F6EF; --exp:#E0623F; --exp-soft:#FDEEE8;
+  --fix:#7A5AF8; --fix-soft:#F1EDFF; --var:#E0623F; --tax:#4E6A86; --tax-soft:#EAF0F6;
+  --c-chunha:#C08A2E; --c-company:#3B82C4; --c-school:#1E9E6A; --c-etc:#9A7BB8;
+  --r:20px; --sh:0 1px 2px rgba(28,28,30,.04), 0 6px 20px rgba(28,28,30,.05);
 }
-*{box-sizing:border-box}
-html,body{margin:0;background:var(--bg);color:var(--ink);font-family:'Noto Sans KR',-apple-system,'Apple SD Gothic Neo','Malgun Gothic',sans-serif;-webkit-font-smoothing:antialiased}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:var(--bg);color:var(--ink);font-family:'Noto Sans KR',-apple-system,'Apple SD Gothic Neo',sans-serif;-webkit-font-smoothing:antialiased;letter-spacing:-.01em}
 button,input,select{font:inherit;color:inherit}
-.app{max-width:560px;margin:0 auto;min-height:100vh;padding:0 0 calc(96px + env(safe-area-inset-bottom))}
+button{cursor:pointer}
+.app{max-width:520px;margin:0 auto;min-height:100vh;padding:0 0 calc(92px + env(safe-area-inset-bottom))}
 .app.locked{visibility:hidden}
-header.top{position:sticky;top:0;z-index:5;background:var(--bg);padding:calc(14px + env(safe-area-inset-top)) 18px 8px;display:flex;align-items:center;justify-content:space-between;gap:10px}
-header.top h1{margin:0;font-size:19px;font-weight:700;letter-spacing:-.02em}
-.year{display:flex;align-items:center;gap:4px}
-.year button{width:40px;height:40px;border:1px solid var(--line);background:var(--card);border-radius:10px;cursor:pointer}
-.year span{min-width:60px;text-align:center;font-weight:700}
-.status{font-size:12px;color:var(--mute);padding:0 18px 6px}
-main{padding:0 14px}
-section > .card + .card, section > .card + .warn, section > .warn + .card{margin-top:12px}
-.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:18px}
-.card h2{margin:0 0 12px;font-size:15px;font-weight:700;letter-spacing:-.01em;display:flex;align-items:center;justify-content:space-between;gap:8px}
-.hero{background:var(--pri);color:#fff;border:0}
-.hero .lbl{font-size:13px;opacity:.9}
-.hero .big{font-size:32px;font-weight:700;letter-spacing:-.03em;margin:6px 0 2px}
-.hero .note{font-size:13px;opacity:.9;line-height:1.6}
-.pill{display:inline-block;padding:3px 10px;border-radius:999px;font-size:12px;font-weight:700;background:rgba(255,255,255,.18)}
-.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
-.stat{background:var(--bg);border-radius:10px;padding:12px 10px}
-.stat .k{font-size:12px;color:var(--sub)}
-.stat .v{font-size:16px;font-weight:700;margin-top:4px;letter-spacing:-.02em;word-break:keep-all}
-.bars{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:4px;align-items:end;height:110px;margin-top:12px}
-.bar{display:flex;flex-direction:column;align-items:center;gap:4px;height:100%;justify-content:flex-end}
-.bar .st{display:flex;gap:2px;align-items:flex-end;width:100%;height:100%}
-.bar i{display:block;flex:1;border-radius:3px 3px 0 0;min-height:2px}
-.bar i.a{background:var(--pri)} .bar i.b{background:#E7A78F}
-.bar b{font-size:10px;font-weight:500;color:var(--mute)}
-.legend{display:flex;gap:14px;font-size:12px;color:var(--sub);margin-top:8px}
-.legend span::before{content:"";display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:5px;vertical-align:-1px;background:var(--pri)}
-.legend span.b::before{background:#E7A78F}
-.brk{display:flex;flex-direction:column;gap:8px}
-.brk .ln{display:grid;grid-template-columns:88px 1fr auto;gap:10px;align-items:center;font-size:13px}
-.brk .ln .tr{height:8px;background:var(--bg);border-radius:4px;overflow:hidden}
-.brk .ln .tr i{display:block;height:100%;background:var(--pri)}
-.brk .ln .tr i.fx{background:var(--fix)} .brk .ln .tr i.vr{background:#E7A78F}
-.brk .ln b{font-weight:700;font-size:13px;white-space:nowrap}
-table.cmp{width:100%;border-collapse:collapse;font-size:13px}
-table.cmp th,table.cmp td{padding:9px 6px;border-bottom:1px solid var(--line);text-align:right}
-table.cmp th:first-child,table.cmp td:first-child{text-align:left}
-table.cmp thead th{font-size:12px;color:var(--sub);font-weight:500}
-table.cmp tr.best td{font-weight:700;background:var(--pri-soft)}
-.tag{font-size:11px;padding:2px 6px;border-radius:6px;background:var(--bg);color:var(--sub);margin-left:4px;font-weight:500}
-.detail{font-size:13px;line-height:1.9;color:var(--sub)}
-.detail div{display:flex;justify-content:space-between;gap:10px;border-bottom:1px dashed var(--line)}
-.detail div b{color:var(--ink);font-weight:500}
-.warn{font-size:12.5px;line-height:1.65;color:var(--sub);background:#FFF8E6;border:1px solid #F2E2B3;border-radius:10px;padding:10px 12px}
-.list{display:flex;flex-direction:column}
-.mhead{font-size:12px;font-weight:700;color:var(--mute);padding:14px 2px 4px;display:flex;justify-content:space-between}
-.row{display:flex;align-items:center;gap:12px;padding:11px 2px;border-bottom:1px solid var(--line)}
-.row .ic{flex:none;width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:11.5px;font-weight:700;text-align:center;line-height:1.1}
-.ic.in{background:var(--plus-soft);color:var(--plus)} .ic.fx{background:var(--fix-soft);color:var(--fix)} .ic.vr{background:var(--minus-soft);color:var(--minus)}
-.row .t{flex:1;min-width:0}
-.row .t .a{font-size:14.5px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.row .t .b{font-size:12px;color:var(--mute);margin-top:2px}
-.row .m{text-align:right;font-weight:700;font-size:14.5px;white-space:nowrap}
-.row .m small{display:block;font-size:11.5px;font-weight:400;color:var(--mute)}
-.biz{display:inline-block;font-size:10.5px;font-weight:700;color:var(--ok);background:var(--plus-soft);border-radius:5px;padding:1px 5px;margin-left:4px}
-.row button.del{border:0;background:none;color:var(--mute);width:36px;height:36px;cursor:pointer;border-radius:8px;flex:none}
-.empty{text-align:center;color:var(--mute);font-size:14px;padding:26px 0}
-.filter{display:flex;gap:6px;flex-wrap:wrap}
-.chip{border:1px solid var(--line);background:var(--card);border-radius:999px;padding:7px 12px;font-size:13px;cursor:pointer;min-height:38px}
-.chip[aria-pressed="true"]{background:var(--ink);color:#fff;border-color:var(--ink)}
-form.f,.f{display:flex;flex-direction:column;gap:12px}
-.seg{display:grid;grid-auto-flow:column;grid-auto-columns:1fr;background:var(--bg);border-radius:12px;padding:4px;gap:4px}
-.seg button{border:0;background:none;border-radius:9px;min-height:44px;font-weight:700;cursor:pointer;color:var(--sub)}
-.seg button[aria-pressed="true"]{background:var(--card);color:var(--ink);box-shadow:0 1px 3px rgba(14,23,38,.12)}
-label.fl{display:flex;flex-direction:column;gap:6px;font-size:13px;font-weight:500;color:var(--sub)}
-.in2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-input.tx,select.tx{min-height:46px;border:1px solid #CDD3DD;border-radius:10px;padding:0 12px;background:#fff;font-size:16px;width:100%}
-input.tx:focus,select.tx:focus{outline:2px solid var(--pri);outline-offset:0;border-color:var(--pri)}
-.hint{font-size:12px;color:var(--mute);font-weight:400;line-height:1.55}
-.btn{min-height:50px;border:0;border-radius:12px;background:var(--pri);color:#fff;font-weight:700;font-size:16px;cursor:pointer;padding:0 16px}
-.btn.ghost{background:var(--card);color:var(--ink);border:1px solid var(--line)}
-.btn.sm{min-height:42px;font-size:14px}
-.btn.danger{background:#B3261E}
-.chk{display:flex;align-items:flex-start;gap:10px;font-size:14px;color:var(--ink);line-height:1.5}
-.chk input{width:20px;height:20px;margin:1px 0 0;flex:none}
-.ded{border-radius:10px;padding:10px 12px;font-size:12.5px;line-height:1.6;background:var(--bg)}
-.ded .lv{font-weight:700;margin-right:6px}
-.lv.ok{color:var(--ok)} .lv.part{color:var(--part)} .lv.no{color:var(--no)}
-.guide{width:100%;border-collapse:collapse;font-size:12.5px}
-.guide td{padding:8px 4px;border-bottom:1px solid var(--line);vertical-align:top;line-height:1.5}
-.guide td:first-child{white-space:nowrap;font-weight:500;width:84px}
-.guide td:nth-child(2){white-space:nowrap;width:58px}
-.guide tr.gh td{font-weight:700;color:var(--sub);background:var(--bg)}
-nav.tabs{position:fixed;left:0;right:0;bottom:0;z-index:10;background:rgba(255,255,255,.97);backdrop-filter:blur(8px);border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom)}
-nav.tabs .in{max-width:560px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr)}
-nav.tabs button{border:0;background:none;min-height:60px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;font-size:11.5px;color:var(--mute);cursor:pointer}
-nav.tabs button svg{width:22px;height:22px}
-nav.tabs button[aria-selected="true"]{color:var(--pri);font-weight:700}
 .hidden{display:none !important}
-.toast{position:fixed;left:50%;bottom:calc(84px + env(safe-area-inset-bottom));transform:translateX(-50%);background:var(--ink);color:#fff;padding:10px 16px;border-radius:10px;font-size:14px;z-index:60;opacity:0;transition:opacity .2s;pointer-events:none;white-space:nowrap}
-.toast.on{opacity:1}
-.sec-t{font-size:13px;font-weight:700;color:var(--sub);margin:6px 0 -2px}
+.top{position:sticky;top:0;z-index:5;background:rgba(245,243,239,.92);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);padding:calc(10px + env(safe-area-inset-top)) 20px 10px;display:flex;align-items:center;justify-content:space-between;gap:10px}
+.top h1{margin:0;font-size:22px;font-weight:800;letter-spacing:-.03em}
+.yr{display:flex;align-items:center;background:var(--card);border-radius:999px;box-shadow:var(--sh);padding:3px}
+.yr button{width:34px;height:34px;border:0;background:none;border-radius:50%;font-size:16px;color:var(--sub)}
+.yr button:active{background:var(--soft)}
+.yr span{min-width:52px;text-align:center;font-weight:700;font-size:15px}
+.sub{font-size:12px;color:var(--mute);padding:0 22px 4px}
+main{padding:6px 16px 0}
+section{display:flex;flex-direction:column;gap:14px}
+.card{background:var(--card);border-radius:var(--r);padding:20px;box-shadow:var(--sh)}
+.card h3{margin:0 0 14px;font-size:15px;font-weight:700;display:flex;align-items:center;justify-content:space-between;gap:8px}
+.card h3 small{font-size:12px;font-weight:500;color:var(--mute)}
+.kpi{font-size:26px;font-weight:800;letter-spacing:-.03em}
+.muted{color:var(--mute)} .small{font-size:12.5px} .tiny{font-size:11.5px}
+.row-b{display:flex;align-items:center;justify-content:space-between;gap:10px}
+/* hero */
+.hero{background:linear-gradient(140deg,var(--night2),var(--night));color:#fff;position:relative;overflow:hidden}
+.hero::after{content:"";position:absolute;right:-40px;top:-40px;width:160px;height:160px;border-radius:50%;border:2px solid rgba(226,185,90,.35)}
+.hero .lb{font-size:13px;color:rgba(255,255,255,.7);display:flex;align-items:center;gap:8px}
+.hero .amt{font-size:24px;font-weight:800;margin:8px 0 4px;letter-spacing:-.02em}
+.hero .amt em{font-style:normal;color:var(--gold2)}
+.hero .ds{font-size:12.5px;color:rgba(255,255,255,.72);line-height:1.6}
+.badge{display:inline-flex;align-items:center;gap:4px;font-size:11.5px;font-weight:700;padding:3px 9px;border-radius:999px;background:rgba(226,185,90,.18);color:var(--gold2)}
+.badge.lt{background:var(--gold-soft);color:var(--gold)}
+/* stats */
+.trio{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.st{background:var(--soft);border-radius:14px;padding:12px}
+.st .k{font-size:11.5px;color:var(--sub)}
+.st .v{font-size:16px;font-weight:800;margin-top:4px;letter-spacing:-.02em}
+.v.inc{color:var(--inc)} .v.exp{color:var(--exp)}
+/* breakdown rows */
+.bk{display:flex;flex-direction:column;gap:12px}
+.bk .it{display:grid;grid-template-columns:10px 1fr auto;gap:10px;align-items:center}
+.bk .dot{width:10px;height:10px;border-radius:3px}
+.bk .nm{font-size:14px;font-weight:500;min-width:0}
+.bk .nm span{display:block;font-size:11.5px;color:var(--mute);font-weight:400;margin-top:1px}
+.bk .vl{font-size:14px;font-weight:700;text-align:right;white-space:nowrap}
+.bk .vl span{display:block;font-size:11px;color:var(--mute);font-weight:500}
+.stack{display:flex;height:10px;border-radius:999px;overflow:hidden;background:var(--soft);margin-bottom:16px}
+.stack i{display:block;height:100%}
+/* chart */
+.chart{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:5px;align-items:end;height:120px}
+.chart .c{display:flex;flex-direction:column;align-items:center;gap:5px;height:100%;justify-content:flex-end}
+.chart .bs{display:flex;gap:2px;align-items:flex-end;width:100%;height:100%}
+.chart .bs i{flex:1;border-radius:4px 4px 2px 2px;min-height:2px}
+.chart .bs i.a{background:var(--inc)} .chart .bs i.b{background:#F0A58E}
+.chart b{font-size:10px;color:var(--mute);font-weight:500}
+.lg{display:flex;gap:14px;font-size:11.5px;color:var(--sub);margin-top:10px}
+.lg span::before{content:"";display:inline-block;width:8px;height:8px;border-radius:2px;background:var(--inc);margin-right:5px}
+.lg span.b::before{background:#F0A58E}
+/* table */
+table.cmp{width:100%;border-collapse:collapse;font-size:13px}
+table.cmp th,table.cmp td{padding:10px 4px;border-bottom:1px solid var(--line);text-align:right}
+table.cmp th:first-child,table.cmp td:first-child{text-align:left}
+table.cmp thead th{font-size:11.5px;color:var(--mute);font-weight:500}
+table.cmp tr.best td{font-weight:800}
+table.cmp tr.best td:first-child::after{content:"추천";margin-left:6px;font-size:10.5px;padding:2px 6px;border-radius:6px;background:var(--gold-soft);color:var(--gold);font-weight:700}
+.lines{display:flex;flex-direction:column}
+.lines .l{display:flex;justify-content:space-between;gap:10px;padding:9px 0;border-bottom:1px solid var(--line);font-size:13.5px}
+.lines .l:last-child{border-bottom:0}
+.lines .l b{font-weight:700}
+.lines .l.tot{font-weight:800;font-size:14.5px}
+.lines .l .muted{font-size:12px}
+details.more{margin-top:6px}
+details.more summary{list-style:none;cursor:pointer;font-size:13px;font-weight:700;color:var(--gold);padding:8px 0;display:flex;align-items:center;gap:6px}
+details.more summary::-webkit-details-marker{display:none}
+details.more summary::after{content:"▾";font-size:11px}
+details[open].more summary::after{content:"▴"}
+.note{font-size:11.5px;color:var(--mute);line-height:1.6;margin:10px 0 0}
+/* list */
+.chips{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;padding:2px}
+.chips::-webkit-scrollbar{display:none}
+.chip{flex:none;border:0;background:var(--card);border-radius:999px;padding:8px 14px;font-size:13px;font-weight:500;color:var(--sub);box-shadow:var(--sh);min-height:36px}
+.chip[aria-pressed="true"]{background:var(--ink);color:#fff}
+.mh{display:flex;justify-content:space-between;align-items:baseline;padding:16px 4px 6px}
+.mh b{font-size:15px;font-weight:800}
+.mh span{font-size:12px;color:var(--mute)}
+.ent{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--line)}
+.ent:last-child{border-bottom:0}
+.ent .ic{flex:none;width:42px;height:42px;border-radius:13px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800}
+.ent .t{flex:1;min-width:0}
+.ent .t .a{font-size:14.5px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ent .t .b{font-size:11.5px;color:var(--mute);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ent .m{text-align:right;font-weight:700;font-size:14.5px;white-space:nowrap}
+.ent .m.inc{color:var(--inc)}
+.ent .m small{display:block;font-size:11px;font-weight:500;color:var(--mute)}
+.ent .del{flex:none;border:0;background:none;color:#C7C7CC;width:30px;height:30px;border-radius:8px;font-size:14px}
+.empty{text-align:center;color:var(--mute);font-size:13.5px;padding:28px 0}
+.sumgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.sumgrid .b{background:var(--soft);border-radius:14px;padding:14px}
+.sumgrid .b .k{font-size:12px;color:var(--sub);display:flex;align-items:center;gap:6px}
+.sumgrid .b .v{font-size:17px;font-weight:800;margin-top:6px;letter-spacing:-.02em}
+.sumgrid .b .s{font-size:11.5px;color:var(--mute);margin-top:6px;line-height:1.7}
+.sumgrid .b.full{grid-column:1/-1}
+/* record form */
+.seg{display:grid;grid-template-columns:repeat(4,1fr);background:var(--soft);border-radius:14px;padding:4px;gap:4px}
+.seg button{border:0;background:none;border-radius:11px;min-height:40px;font-weight:700;font-size:13.5px;color:var(--sub)}
+.seg button[aria-pressed="true"]{background:var(--card);color:var(--ink);box-shadow:0 1px 4px rgba(0,0,0,.08)}
+.amtbox{text-align:center;padding:8px 0 4px}
+.amtbox .lb{font-size:12.5px;color:var(--mute)}
+.amtbox .w{display:flex;align-items:baseline;justify-content:center;gap:4px;margin-top:6px}
+.amtbox input{border:0;background:none;font-size:34px;font-weight:800;text-align:right;width:100%;max-width:260px;outline:none;letter-spacing:-.03em;padding:0}
+.amtbox input::placeholder{color:#D1CFC9}
+.amtbox .u{font-size:22px;font-weight:700;color:var(--sub)}
+.quick{display:flex;gap:6px;justify-content:center;margin-top:10px;flex-wrap:wrap}
+.quick button{border:1px solid var(--line);background:var(--card);border-radius:999px;font-size:12.5px;padding:6px 12px;color:var(--sub);min-height:34px}
+.fl{display:flex;flex-direction:column;gap:8px}
+.fl > .lab{font-size:12.5px;font-weight:700;color:var(--sub)}
+.pick{display:flex;flex-wrap:wrap;gap:7px}
+.pick button{border:1.5px solid var(--line);background:var(--card);border-radius:12px;padding:8px 12px;font-size:13.5px;font-weight:500;color:var(--ink);min-height:40px}
+.pick button[aria-pressed="true"]{border-color:var(--ink);background:var(--ink);color:#fff}
+.pick button .d{display:inline-block;width:8px;height:8px;border-radius:2px;margin-right:6px;vertical-align:1px}
+.inrow{display:flex;gap:8px;align-items:center}
+.date{display:flex;align-items:center;gap:6px}
+.date input{border:1.5px solid var(--line);border-radius:12px;padding:0 10px;height:40px;background:var(--card);font-size:15px;width:150px}
+.date button{border:0;background:var(--soft);border-radius:10px;height:40px;padding:0 12px;font-size:13px;color:var(--sub)}
+input.tx{width:100%;height:46px;border:1.5px solid var(--line);border-radius:12px;padding:0 14px;background:var(--card);font-size:15.5px}
+input.tx:focus,.date input:focus{outline:none;border-color:var(--gold)}
+.calc{background:var(--soft);border-radius:14px;padding:12px 14px;font-size:13px;line-height:1.8}
+.calc .row-b b{font-weight:700}
+.toggle{display:flex;background:var(--soft);border-radius:10px;padding:3px;gap:3px;align-self:flex-start}
+.toggle button{border:0;background:none;border-radius:8px;padding:6px 12px;font-size:12.5px;font-weight:700;color:var(--mute)}
+.toggle button[aria-pressed="true"]{background:var(--card);color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.08)}
+.btn{height:52px;border:0;border-radius:16px;background:var(--ink);color:#fff;font-weight:700;font-size:16px;width:100%}
+.btn.gh{background:var(--card);color:var(--ink);border:1.5px solid var(--line)}
+.btn.sm{height:42px;font-size:14px;border-radius:12px;width:auto;padding:0 16px}
+.btn.gold{background:linear-gradient(135deg,var(--gold2),var(--gold));color:#1C1C1E}
+/* settings */
+.set-g{background:var(--card);border-radius:var(--r);box-shadow:var(--sh);overflow:hidden}
+.set-g .hd{padding:16px 20px 4px;font-size:12px;font-weight:700;color:var(--mute)}
+.set-r{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 20px;border-bottom:1px solid var(--line)}
+.set-r:last-child{border-bottom:0}
+.set-r .t{min-width:0}
+.set-r .t b{display:block;font-size:14.5px;font-weight:500}
+.set-r .t span{display:block;font-size:11.5px;color:var(--mute);margin-top:2px;line-height:1.5}
+.set-r input{width:128px;height:40px;border:1.5px solid var(--line);border-radius:10px;padding:0 10px;text-align:right;font-size:15px;background:var(--soft)}
+.set-r input:focus{outline:none;border-color:var(--gold);background:#fff}
+.set-r select{height:40px;border:1.5px solid var(--line);border-radius:10px;padding:0 8px;font-size:14px;background:var(--soft);max-width:150px}
+.set-r .auto{font-size:14px;font-weight:700;white-space:nowrap}
+.stepper{display:flex;align-items:center;gap:4px}
+.stepper button{width:36px;height:36px;border-radius:10px;border:0;background:var(--soft);font-size:18px}
+.stepper span{min-width:28px;text-align:center;font-weight:700}
+/* fortune */
+.ft{background:radial-gradient(120% 80% at 20% 0%,#2E3350 0%,#161927 60%);color:#fff;border-radius:24px;padding:22px 20px 24px;box-shadow:0 10px 30px rgba(22,25,39,.25);position:relative;overflow:hidden}
+.ft .dt{font-size:12.5px;color:rgba(255,255,255,.65)}
+.ft h2{margin:4px 0 0;font-family:'Noto Serif KR',serif;font-size:22px;font-weight:700;color:var(--gold2)}
+.tarot{perspective:900px;width:130px;height:204px;margin:4px auto 10px;cursor:pointer;border:0;background:none;padding:0;display:block}
+.tarot .in{position:relative;width:100%;height:100%;transition:transform .7s cubic-bezier(.2,.7,.2,1);transform-style:preserve-3d}
+.tarot.flip .in{transform:rotateY(180deg)}
+.tarot .fc{position:absolute;inset:0;border-radius:14px;backface-visibility:hidden;-webkit-backface-visibility:hidden;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.tarot .back{background:linear-gradient(150deg,#2B2F4A,#111322);border:2px solid rgba(226,185,90,.7);box-shadow:inset 0 0 0 6px #161927, inset 0 0 0 7px rgba(226,185,90,.4)}
+.tarot .front{transform:rotateY(180deg);background:linear-gradient(170deg,#FFF9EC,#F3E3BF);color:#3B2A10;border:2px solid var(--gold);padding:12px 8px;text-align:center}
+.tarot .front .no{font-family:'Noto Serif KR',serif;font-size:14px;font-weight:700;color:var(--gold)}
+.tarot .front .nm{font-family:'Noto Serif KR',serif;font-size:16px;font-weight:700;margin-top:6px}
+.tarot .front .en{font-size:10.5px;color:#8A6A30;letter-spacing:.06em;margin-top:2px}
+.tap{text-align:center;font-size:12.5px;color:rgba(255,255,255,.7)}
+.ft .msg{font-size:14.5px;line-height:1.75;margin-top:14px;color:rgba(255,255,255,.92);text-align:center}
+.stars{display:grid;grid-template-columns:1fr 1fr;gap:10px 16px;margin-top:18px}
+.stars div{display:flex;justify-content:space-between;font-size:13px;color:rgba(255,255,255,.8)}
+.stars b{color:var(--gold2);letter-spacing:1px;font-weight:400}
+.lucky{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.lucky .b{background:var(--card);border-radius:18px;padding:16px;box-shadow:var(--sh)}
+.lucky .b .k{font-size:12px;color:var(--mute)}
+.lucky .b .v{font-size:17px;font-weight:800;margin-top:8px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.ball{width:34px;height:34px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;color:#fff}
+.sw{width:26px;height:26px;border-radius:8px;border:1px solid rgba(0,0,0,.08)}
+.ilj{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
+.ilj span{font-size:12px;padding:4px 10px;border-radius:999px;background:rgba(255,255,255,.08);color:rgba(255,255,255,.85)}
+.ilj span b{color:var(--gold2)}
+.ft .msg{text-align:left}
+.rel{margin-top:14px;font-size:12.5px;line-height:1.6;color:rgba(255,255,255,.8);background:rgba(226,185,90,.1);border-radius:12px;padding:10px 12px}
+.pil{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;text-align:center}
+.pil .h{font-size:11.5px;color:var(--mute);margin-bottom:6px}
+.pil .c{border-radius:12px;padding:8px 0;font-family:'Noto Serif KR',serif;font-size:22px;font-weight:700;line-height:1.25}
+.pil .c small{display:block;font-family:'Noto Sans KR',sans-serif;font-size:10.5px;font-weight:500;opacity:.8}
+.el-0{background:#E5F4EA;color:#2F7D4A}.el-1{background:#FDE8E4;color:#C23E33}.el-2{background:#F8F0DC;color:#9A7420}.el-3{background:#EEF0F3;color:#5B6372}.el-4{background:#E4E9F3;color:#2E3D6B}
+.ebar{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-top:14px;text-align:center;font-size:12px}
+.ebar div{border-radius:10px;padding:8px 0}
+.ebar b{display:block;font-size:16px}
+.quote{font-family:'Noto Serif KR',serif;font-size:15px;line-height:1.7;text-align:center;color:var(--ink)}
+/* tabs */
+nav.tabs{position:fixed;left:0;right:0;bottom:0;z-index:10;background:rgba(255,255,255,.94);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom)}
+nav.tabs .in{max-width:520px;margin:0 auto;display:grid;grid-template-columns:repeat(5,1fr)}
+nav.tabs button{border:0;background:none;height:58px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;font-size:10.5px;color:var(--mute);font-weight:500}
+nav.tabs button svg{width:22px;height:22px}
+nav.tabs button[aria-selected="true"]{color:var(--ink);font-weight:700}
+nav.tabs button.add svg{width:30px;height:30px;color:var(--gold)}
+.toast{position:fixed;left:50%;bottom:calc(80px + env(safe-area-inset-bottom));transform:translateX(-50%) translateY(8px);background:rgba(28,28,30,.92);color:#fff;padding:10px 16px;border-radius:12px;font-size:13.5px;z-index:70;opacity:0;transition:all .2s;pointer-events:none;white-space:nowrap}
+.toast.on{opacity:1;transform:translateX(-50%)}
 /* lock */
-#lock{position:fixed;inset:0;z-index:50;background:var(--pri);color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:calc(20px + env(safe-area-inset-top)) 20px calc(20px + env(safe-area-inset-bottom));gap:18px}
+#lock{position:fixed;inset:0;z-index:60;background:radial-gradient(120% 80% at 30% 0%,#2E3350,#161927 60%);color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:calc(20px + env(safe-area-inset-top)) 20px calc(20px + env(safe-area-inset-bottom));gap:18px}
 #lock.hidden{display:none}
-#lock h2{margin:0;font-size:20px;font-weight:700}
-#lock .msg{font-size:14px;opacity:.9;min-height:22px;text-align:center}
-#lock .msg.err{color:#FFD2C8;opacity:1;font-weight:700}
-.dots{display:flex;gap:14px;min-height:16px}
-.dots i{width:14px;height:14px;border-radius:50%;border:2px solid rgba(255,255,255,.8)}
-.dots i.on{background:#fff;border-color:#fff}
-.pad{display:grid;grid-template-columns:repeat(3,76px);gap:14px}
-.pad button{width:76px;height:76px;border-radius:50%;border:0;background:rgba(255,255,255,.14);color:#fff;font-size:26px;font-weight:500;cursor:pointer}
-.pad button:active{background:rgba(255,255,255,.3)}
-.pad button.fn{background:none;font-size:15px}
-.pat{touch-action:none;width:270px;height:270px}
-.lk-actions{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
-.lk-link{background:none;border:0;color:#fff;opacity:.85;text-decoration:underline;font-size:14px;cursor:pointer;min-height:44px;padding:0 8px}
-.lk-btn{min-height:46px;border-radius:12px;border:0;background:#fff;color:var(--pri);font-weight:700;padding:0 20px;font-size:15px;cursor:pointer}
-.lk-btn.alt{background:rgba(255,255,255,.16);color:#fff}
+#lock .logo{width:64px;height:64px;border-radius:18px}
+#lock h2{margin:0;font-size:19px;font-weight:700}
+#lock .msg{font-size:13.5px;color:rgba(255,255,255,.75);min-height:20px;text-align:center;max-width:300px;line-height:1.6}
+#lock .msg.err{color:#FFC2B0;font-weight:700}
+.dots{display:flex;gap:16px;min-height:14px}
+.dots i{width:13px;height:13px;border-radius:50%;border:1.5px solid rgba(226,185,90,.9)}
+.dots i.on{background:var(--gold2)}
+.pad{display:grid;grid-template-columns:repeat(3,74px);gap:16px}
+.pad button{width:74px;height:74px;border-radius:50%;border:0;background:rgba(255,255,255,.08);color:#fff;font-size:26px;font-weight:500}
+.pad button:active{background:rgba(255,255,255,.22)}
+.pad button.fn{background:none;font-size:14px}
+.pat{touch-action:none;width:264px;height:264px}
+.lk-a{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+.lk-link{background:none;border:0;color:rgba(255,255,255,.75);text-decoration:underline;font-size:13.5px;min-height:44px;padding:0 8px}
+.lk-btn{height:46px;border-radius:14px;border:0;background:var(--gold2);color:#1C1C1E;font-weight:700;padding:0 20px;font-size:15px}
+.lk-btn.alt{background:rgba(255,255,255,.12);color:#fff}
 </style>
 </head>
 <body>
 <div class="app locked" id="app">
   <header class="top">
-    <h1>내 장부</h1>
-    <div class="year" role="group" aria-label="연도 선택">
-      <button type="button" id="yPrev" aria-label="이전 연도">‹</button>
-      <span id="yLbl">2026</span>
-      <button type="button" id="yNext" aria-label="다음 연도">›</button>
+    <h1 id="ttl">오늘</h1>
+    <div class="yr" id="yrBox" role="group" aria-label="연도 선택">
+      <button type="button" id="yPrev" aria-label="이전 연도">‹</button><span id="yLbl">2026</span><button type="button" id="yNext" aria-label="다음 연도">›</button>
     </div>
   </header>
-  <div class="status" id="status" role="status">불러오는 중…</div>
-
+  <div class="sub" id="status" role="status"></div>
   <main>
-    <!-- HOME -->
-    <section id="tab-home">
-      <div class="card hero">
-        <div class="lbl"><span id="hYear">2027</span>년 5월 종합소득세 예상 <span class="pill" id="hMethod">-</span></div>
-        <div class="big" id="hBig">-</div>
-        <div class="note" id="hNote">수입을 기록하면 계산돼요.</div>
-      </div>
-      <div class="card">
-        <h2>올해 현황</h2>
-        <div class="grid3">
-          <div class="stat"><div class="k">수입 (세전)</div><div class="v" id="sGross">0</div></div>
-          <div class="stat"><div class="k">총지출</div><div class="v" id="sSpend">0</div></div>
-          <div class="stat"><div class="k">업무경비</div><div class="v" id="sBiz">0</div></div>
+
+  <!-- TODAY -->
+  <section id="tab-today">
+    <div class="card hidden" id="profAsk">
+      <h3>사주로 보는 오늘의 운세</h3>
+      <p class="small muted" style="margin:0 0 14px;line-height:1.6">생년월일을 넣으면 내 사주와 오늘의 일진으로 풀이해요. 정보는 이 기기에만 저장돼요.</p>
+      <div class="fl" style="margin-bottom:12px"><span class="lab">생년월일 (양력)</span><input class="tx" type="date" id="pfBirth"></div>
+      <div class="fl" style="margin-bottom:14px"><span class="lab">태어난 시간 (선택)</span><input class="tx" type="time" id="pfTime"></div>
+      <button type="button" class="btn" id="pfSave">내 운세 보기</button>
+    </div>
+    <div class="ft" id="ftCard">
+      <div class="dt" id="fDate"></div>
+      <h2 id="fHead">오늘의 운세</h2>
+      <div class="ilj" id="fIlj"></div>
+      <div class="msg" id="fMsg"></div>
+      <div class="stars" id="fStars"></div>
+      <div class="rel hidden" id="fRel"></div>
+    </div>
+    <div class="lucky">
+      <div class="b"><div class="k">행운의 숫자</div><div class="v" id="lNum"></div></div>
+      <div class="b"><div class="k">행운의 색</div><div class="v" id="lCol"></div></div>
+      <div class="b"><div class="k">행운의 방향</div><div class="v" id="lDir"></div></div>
+      <div class="b"><div class="k">행운의 아이템</div><div class="v" id="lItem"></div></div>
+    </div>
+    <div class="card"><h3>오늘의 돈 조언</h3><div class="small" id="lMoney" style="line-height:1.7"></div><div class="small" id="lLedger" style="line-height:1.7;margin-top:10px;padding-top:10px;border-top:1px solid var(--line)"></div></div>
+    <details class="card more hidden" id="myChart" style="padding:16px 20px"><summary style="color:var(--ink);font-size:15px">나의 사주 원국</summary><div id="chartBody" style="margin-top:12px"></div></details>
+    <div class="card">
+      <h3>오늘의 타로 <small>재미로 한 장</small></h3>
+      <button type="button" class="tarot" id="tarot" aria-label="오늘의 타로 카드 뒤집기">
+        <div class="in">
+          <div class="fc back"><svg width="70" height="70" viewBox="0 0 70 70" aria-hidden="true"><circle cx="35" cy="35" r="28" fill="none" stroke="#E2B95A" stroke-width="2"/><circle cx="35" cy="35" r="20" fill="none" stroke="#E2B95A" stroke-width="1" opacity=".6"/><path d="M35 13 L39 31 L57 35 L39 39 L35 57 L31 39 L13 35 L31 31 Z" fill="#E2B95A"/></svg></div>
+          <div class="fc front"><div class="no" id="tNo"></div><svg id="tSym" width="74" height="74" viewBox="0 0 74 74" aria-hidden="true" style="margin-top:10px"></svg><div class="nm" id="tNm"></div><div class="en" id="tEn"></div></div>
         </div>
-        <div class="bars" id="bars" aria-label="월별 수입과 지출"></div>
-        <div class="legend"><span>수입</span><span class="b">지출</span></div>
-      </div>
-      <div class="card">
-        <h2>수입처별</h2>
-        <div class="brk" id="incBrk"></div>
-      </div>
-      <div class="card">
-        <h2>지출 항목별</h2>
-        <div class="brk" id="expBrk"></div>
-      </div>
-      <div class="card">
-        <h2>신고 방법별 비교</h2>
-        <table class="cmp">
-          <thead><tr><th>방법</th><th>소득금액</th><th>총 세금</th><th>정산</th></tr></thead>
-          <tbody id="cmpBody"></tbody>
-        </table>
-        <p class="hint" style="margin:10px 0 0">정산의 −는 환급, +는 추가납부예요. 장부(실제 경비)에는 ‘업무 관련’으로 표시한 지출만 들어가요.</p>
-      </div>
-      <div class="card">
-        <h2>계산 내역 <span class="tag" id="dTag">-</span></h2>
-        <div class="detail" id="detail"></div>
-      </div>
-      <div class="warn" style="margin-top:12px">참고용 추정치예요. 실제 세액은 공제 항목, 다른 소득, 가산세 등에 따라 달라질 수 있어요. 신고 전에 홈택스 계산 결과로 꼭 확인하세요.</div>
-    </section>
+      </button>
+      <div class="small muted" id="tapHint" style="text-align:center">카드를 눌러 뒤집어 보세요</div>
+      <div class="small hidden" id="tMsg" style="text-align:center;line-height:1.7"></div>
+    </div>
+    <button type="button" class="btn gold" id="goHome">내 장부 보러 가기</button>
+    <p class="note" style="text-align:center;margin:0">명리학의 일진·십신 원리로 계산한 풀이예요. 재미와 참고로만 봐주세요.</p>
+  </section>
 
-    <!-- LIST -->
-    <section id="tab-list" class="hidden">
-      <div class="card">
-        <div class="filter" role="group" aria-label="보기 필터">
-          <button type="button" class="chip" data-f="all" aria-pressed="true">전체</button>
-          <button type="button" class="chip" data-f="in" aria-pressed="false">수입</button>
-          <button type="button" class="chip" data-f="fixed" aria-pressed="false">고정비</button>
-          <button type="button" class="chip" data-f="var" aria-pressed="false">변동비</button>
-          <button type="button" class="chip" data-f="biz" aria-pressed="false">업무경비</button>
-        </div>
-        <div class="list" id="list"></div>
+  <!-- SUMMARY -->
+  <section id="tab-home" class="hidden">
+    <div class="card hero">
+      <div class="lb"><span id="hYear"></span><span class="badge" id="hMethod">-</span></div>
+      <div class="amt" id="hAmt">-</div>
+      <div class="ds" id="hDesc"></div>
+    </div>
+    <div class="card">
+      <h3>올해 흐름 <small>통장 기준</small></h3>
+      <div class="trio">
+        <div class="st"><div class="k">들어온 돈</div><div class="v inc" id="sIn">0</div></div>
+        <div class="st"><div class="k">나간 돈</div><div class="v exp" id="sOut">0</div></div>
+        <div class="st"><div class="k">남은 돈</div><div class="v" id="sNet">0</div></div>
       </div>
-    </section>
+      <div class="chart" id="chart" style="margin-top:18px" aria-label="월별 수입과 지출"></div>
+      <div class="lg"><span>수입</span><span class="b">지출</span></div>
+    </div>
+    <div class="card">
+      <h3>수입처별 <small id="incTot"></small></h3>
+      <div class="stack" id="incStack"></div>
+      <div class="bk" id="incBk"></div>
+    </div>
+    <div class="card">
+      <h3>지출 <small id="expTot"></small></h3>
+      <div class="stack" id="expStack"></div>
+      <div class="bk" id="expBk"></div>
+      <details class="more"><summary>항목별 자세히</summary><div class="bk" id="catBk" style="margin-top:8px"></div></details>
+    </div>
+    <div class="card">
+      <h3>세금 미리보기 <small id="taxFor"></small></h3>
+      <div id="taxBody"></div>
+    </div>
+    <div class="card">
+      <h3>예상 공제 <small>자동 추정</small></h3>
+      <div class="lines" id="dedLines"></div>
+      <p class="note">급여는 실수령액으로 세전 금액을 추정했고, 지출은 항목별로 업무에 쓰였을 비율을 추정해 반영했어요. 실제 신고 전 홈택스 결과로 확인하세요.</p>
+    </div>
+  </section>
 
-    <!-- ADD -->
-    <section id="tab-add" class="hidden">
-      <div class="card">
-        <form class="f" id="addForm" novalidate>
-          <div class="seg" role="group" aria-label="구분">
-            <button type="button" data-k="in" aria-pressed="true">수입</button>
-            <button type="button" data-k="fixed" aria-pressed="false">고정비</button>
-            <button type="button" data-k="var" aria-pressed="false">변동비</button>
-          </div>
-          <label class="fl">날짜<input class="tx" type="date" id="fDate" required></label>
+  <!-- LIST -->
+  <section id="tab-list" class="hidden">
+    <div class="card">
+      <h3><span id="lyTitle">연 합계</span><small id="lyCount"></small></h3>
+      <div class="sumgrid" id="ySum"></div>
+    </div>
+    <div class="chips" id="chips" role="group" aria-label="보기">
+      <button type="button" class="chip" data-f="all" aria-pressed="true">전체</button>
+      <button type="button" class="chip" data-f="in" aria-pressed="false">수입</button>
+      <button type="button" class="chip" data-f="fixed" aria-pressed="false">고정비</button>
+      <button type="button" class="chip" data-f="var" aria-pressed="false">변동비</button>
+      <button type="button" class="chip" data-f="tax" aria-pressed="false">세금·이자</button>
+    </div>
+    <div class="card" style="padding-top:4px" id="listCard"><div id="list"></div></div>
+  </section>
 
-          <div id="inFields" class="f">
-            <label class="fl">수입처
-              <select class="tx" id="fSrc">
-                <option value="company">회사 (3.3%)</option>
-                <option value="school">학교 (3.3%)</option>
-                <option value="etc">기타 (개인 간, 원천징수 없음)</option>
-                <option value="wage">급여 (근로소득 · 3.3% 계산 제외)</option>
-                <option value="corp">법인 입금 (와이엔글로벌 등 · 세금 계산 제외)</option>
-              </select>
-            </label>
-            <label class="chk hidden" id="notaxWrap"><input type="checkbox" id="fNotax"><span>세금 계산에서 빼기<br><span class="hint">가족 송금, 환불, 빌린 돈처럼 소득이 아닌 돈이면 체크하세요.</span></span></label>
-            <label class="fl">내용<input class="tx" type="text" id="fWho" placeholder="예) OO대 특강, 자문료" maxlength="60"></label>
-            <div class="in2">
-              <label class="fl">지급액 (세전)<input class="tx" type="text" inputmode="numeric" id="fGross" placeholder="0"></label>
-              <label class="fl">원천징수액<input class="tx" type="text" inputmode="numeric" id="fWith" placeholder="자동"></label>
-            </div>
-            <div class="hint" id="netHint">실수령액: 0원</div>
-          </div>
-
-          <div id="outFields" class="f hidden">
-            <label class="fl">항목<select class="tx" id="fCat"></select></label>
-            <label class="fl" id="memoWrap"><span id="memoLbl">메모 (선택)</span><input class="tx" type="text" id="fMemo" placeholder="" maxlength="80"></label>
-            <label class="fl">금액<input class="tx" type="text" inputmode="numeric" id="fAmt" placeholder="0"></label>
-            <div class="ded" id="dedInfo"></div>
-            <label class="chk"><input type="checkbox" id="fBiz"><span>업무 관련 지출이에요 (경비로 넣기)<br><span class="hint">증빙(카드·현금영수증·고지서)을 보관해야 인정돼요.</span></span></label>
-            <label class="fl hidden" id="ratioWrap">업무 사용 비율 %<input class="tx" type="text" inputmode="numeric" id="fRatio" value="100"><span class="hint">집과 함께 쓰는 통신비·전기요금은 업무 사용분만 넣으세요.</span></label>
-          </div>
-          <button class="btn" type="submit">저장</button>
-          <button class="btn ghost hidden" type="button" id="copyFixed">지난달 고정비 그대로 불러오기</button>
-        </form>
+  <!-- ADD -->
+  <section id="tab-add" class="hidden">
+    <div class="card" style="display:flex;flex-direction:column;gap:18px">
+      <div class="seg" role="group" aria-label="구분">
+        <button type="button" data-k="in" aria-pressed="true">수입</button>
+        <button type="button" data-k="fixed" aria-pressed="false">고정비</button>
+        <button type="button" data-k="var" aria-pressed="false">변동비</button>
+        <button type="button" data-k="tax" aria-pressed="false">세금·이자</button>
       </div>
-    </section>
+      <div class="amtbox">
+        <div class="lb" id="aLbl">금액</div>
+        <div class="w"><input id="aAmt" inputmode="numeric" placeholder="0" aria-label="금액"><span class="u">원</span></div>
+        <div class="quick" id="quick"><button type="button" data-v="10000">+1만</button><button type="button" data-v="100000">+10만</button><button type="button" data-v="1000000">+100만</button><button type="button" data-v="0">지우기</button></div>
+      </div>
+      <div class="fl"><span class="lab">날짜</span>
+        <div class="date"><input type="date" id="aDate" aria-label="날짜"><button type="button" id="dToday">오늘</button><button type="button" id="dYest">어제</button></div>
+      </div>
 
-    <!-- SETTINGS -->
-    <section id="tab-set" class="hidden">
-      <div class="card">
-        <h2>앱 잠금</h2>
-        <p class="hint" id="lockState" style="margin:0 0 10px">잠금이 꺼져 있어요.</p>
-        <div style="display:flex;gap:8px;flex-wrap:wrap">
-          <button type="button" class="btn sm" id="lkPin">숫자 비밀번호 설정</button>
-          <button type="button" class="btn sm ghost" id="lkPat">패턴 설정</button>
-          <button type="button" class="btn sm ghost hidden" id="lkOff">잠금 끄기</button>
-        </div>
-        <p class="hint" style="margin:10px 0 0">앱을 열 때와 1분 넘게 다른 앱을 쓰다 돌아올 때 잠겨요. 잠금은 이 기기에만 적용돼요.</p>
+      <div id="inF" style="display:flex;flex-direction:column;gap:18px">
+        <div class="fl"><span class="lab">어디서 받았나요</span><div class="pick" id="pSrc"></div></div>
+        <div class="fl"><span class="lab">소득 종류</span><div class="pick" id="pKind"></div></div>
+        <div class="toggle" id="basisT" role="group" aria-label="입력 기준"><button type="button" data-b="gross" aria-pressed="true">세전 금액</button><button type="button" data-b="net" aria-pressed="false">실수령액</button></div>
+        <div class="calc" id="inCalc"></div>
       </div>
-      <div class="card">
-        <form class="f" id="setForm">
-          <div class="sec-t">업종과 경비율</div>
-          <label class="fl">업종 (사업소득)
-            <select class="tx" id="sInd">
-              <option value="940903">940903 강사</option>
-              <option value="940100">940100 작가 (저술)</option>
-              <option value="custom">직접 입력</option>
-            </select>
-          </label>
-          <div class="in2">
-            <label class="fl">단순경비율 %<input class="tx" type="text" inputmode="decimal" id="sRs"></label>
-            <label class="fl">기준경비율 %<input class="tx" type="text" inputmode="decimal" id="sRb"></label>
-          </div>
-          <div class="hint" id="indHint"></div>
-          <label class="fl">직전 연도 사업소득 수입 (세전)<input class="tx" type="text" inputmode="numeric" id="sPrev" placeholder="0"><span class="hint">3,600만 원 미만이면 단순경비율을 쓸 수 있어요. 전년도 장부가 있으면 자동으로 채워져요.</span></label>
-          <label class="chk"><input type="checkbox" id="sNew"><span>올해 처음 사업소득이 생겼어요 (신규)</span></label>
 
-          <div class="sec-t">공제</div>
-          <div class="in2">
-            <label class="fl">기본공제 인원<input class="tx" type="text" inputmode="numeric" id="sPeople" placeholder="1"><span class="hint">본인 포함, 1인당 150만 원</span></label>
-            <label class="fl">추가공제 합계<input class="tx" type="text" inputmode="numeric" id="sExtra" placeholder="0"><span class="hint">경로·장애인·부녀자 등</span></label>
-          </div>
-          <div class="in2">
-            <label class="fl">국민연금 납부액<input class="tx" type="text" inputmode="numeric" id="sPension" placeholder="0"><span class="hint">지역가입 연간 합계 (소득공제)</span></label>
-            <label class="fl">기타 소득공제<input class="tx" type="text" inputmode="numeric" id="sOtherDed" placeholder="0"><span class="hint">노란우산 등 (한도 확인)</span></label>
-          </div>
-          <label class="fl">추가 세액공제<input class="tx" type="text" inputmode="numeric" id="sCredit" placeholder="0"><span class="hint">자녀세액공제 등. 표준세액공제 7만 원은 자동 반영돼요.</span></label>
+      <div id="outF" class="hidden" style="display:flex;flex-direction:column;gap:18px">
+        <div class="fl"><span class="lab">항목</span><div class="pick" id="pCat"></div></div>
+        <div class="calc" id="outCalc"></div>
+      </div>
 
-          <div class="sec-t">다른 소득 (선택)</div>
-          <label class="fl">급여 총급여 (세전 연간)<input class="tx" type="text" inputmode="numeric" id="sWageGross" placeholder="0"><span class="hint">근로소득원천징수영수증의 ‘총급여’. 넣으면 근로소득금액을 자동 계산해요 (아래 칸을 비워두세요).</span></label>
-          <div class="in2">
-            <label class="fl">근로소득금액 등<input class="tx" type="text" inputmode="numeric" id="sOtherInc" placeholder="0"><span class="hint">월급이 있다면 꼭 입력</span></label>
-            <label class="fl">그 소득의 기납부세액<input class="tx" type="text" inputmode="numeric" id="sOtherPaid" placeholder="0"><span class="hint">연말정산 결정세액. 근로소득세액공제는 ‘추가 세액공제’에</span></label>
-          </div>
-          <label class="fl">연말까지 더 받을 예상 수입 (3.3%)<input class="tx" type="text" inputmode="numeric" id="sMore" placeholder="0"><span class="hint">미리보기용, 장부에는 기록되지 않아요.</span></label>
-          <button class="btn" type="submit">설정 저장</button>
-        </form>
-      </div>
-      <div class="card">
-        <h2>항목별 공제 안내</h2>
-        <table class="guide" id="guide"></table>
-        <p class="hint" style="margin:10px 0 0">○ 인정 · △ 업무 관련분만 · ✕ 인정 안 됨. 3.3% 사업소득 기준이에요. 월급(근로소득)이 있으면 의료비·보험료 등은 회사 연말정산에서 따로 공제받을 수 있어요.</p>
-      </div>
-      <div class="card">
-        <h2>백업</h2>
-        <div style="display:flex;gap:8px;flex-wrap:wrap">
-          <button type="button" class="btn ghost sm" id="bExport">이 연도 CSV</button>
-          <button type="button" class="btn ghost sm" id="bJson">전체 백업 (JSON)</button>
-          <label class="btn ghost sm" style="display:inline-flex;align-items:center;cursor:pointer">백업 불러오기<input type="file" accept="application/json,.json" id="bImport" class="hidden"></label>
-        </div>
-      </div>
-    </section>
+      <div class="fl"><span class="lab" id="memoLab">메모 (선택)</span><input class="tx" id="aMemo" maxlength="80" placeholder="예) OO대 특강"></div>
+      <button type="button" class="btn" id="aSave">저장하기</button>
+      <button type="button" class="btn gh hidden" id="copyFixed">지난달 고정비 그대로 불러오기</button>
+    </div>
+  </section>
+
+  <!-- SETTINGS -->
+  <section id="tab-set" class="hidden">
+    <div class="set-g">
+      <div class="hd">세금 계산에 쓰는 정보</div>
+      <div class="set-r"><div class="t"><b>가족 수 (본인 포함)</b><span>세금 계산 시 1명당 150만 원씩 빠져요</span></div><div class="stepper"><button type="button" id="pM" aria-label="줄이기">−</button><span id="pV">1</span><button type="button" id="pP" aria-label="늘리기">+</button></div></div>
+      <div class="set-r"><div class="t"><b>내가 직접 낸 국민연금</b><span>올해 지역가입으로 낸 금액 (학교에서 냈다면 0)</span></div><input id="sPen" inputmode="numeric" placeholder="0"></div>
+      <div class="set-r"><div class="t"><b>노란우산·기타 공제</b><span>공제받을 금액 합계</span></div><input id="sOD" inputmode="numeric" placeholder="0"></div>
+      <div class="set-r"><div class="t"><b>자녀 등 추가 세액공제</b><span>있다면 금액을 넣어주세요</span></div><input id="sCr" inputmode="numeric" placeholder="0"></div>
+      <div class="set-r"><div class="t"><b>연말까지 더 받을 3.3% 수입</b><span>미리보기에만 반영돼요</span></div><input id="sMore" inputmode="numeric" placeholder="0"></div>
+    </div>
+    <div class="set-g">
+      <div class="hd">자동으로 판단한 값</div>
+      <div class="set-r"><div class="t"><b>작년 3.3% 수입</b><span>장부에서 자동 계산 · 단순경비율 기준 3,600만 원</span></div><div class="auto" id="aPrev">0원</div></div>
+      <div class="set-r"><div class="t"><b>급여 세전 추정</b><span>실수령액 ÷ 실수령 비율로 추정해요</span></div><div class="auto" id="aWage">0원</div></div>
+      <div class="set-r"><div class="t"><b>급여 실수령 비율</b><span>보통 85~90%. 원천징수영수증이 있으면 맞춰주세요</span></div><input id="sRatio" inputmode="decimal" placeholder="88" style="width:80px"></div>
+    </div>
+    <details class="set-g more" style="padding:0">
+      <summary style="padding:16px 20px;color:var(--ink)">업종과 경비율 (고급)</summary>
+      <div class="set-r"><div class="t"><b>업종</b></div><select id="sInd"><option value="940903">강사 (940903)</option><option value="940100">작가 (940100)</option><option value="custom">직접 입력</option></select></div>
+      <div class="set-r"><div class="t"><b>단순경비율 %</b><span id="indNote"></span></div><input id="sRs" inputmode="decimal" style="width:80px"></div>
+      <div class="set-r"><div class="t"><b>기준경비율 %</b></div><input id="sRb" inputmode="decimal" style="width:80px"></div>
+    </details>
+    <div class="set-g">
+      <div class="hd">운세용 내 정보 (이 기기에만 저장)</div>
+      <div class="set-r"><div class="t"><b>생년월일 (양력)</b></div><input type="date" id="sBirth" style="width:150px;text-align:left"></div>
+      <div class="set-r"><div class="t"><b>태어난 시간</b><span>모르면 비워두세요</span></div><input type="time" id="sTime" style="width:120px;text-align:left"></div>
+    </div>
+    <div class="set-g">
+      <div class="hd">보안</div>
+      <div class="set-r"><div class="t"><b>앱 잠금</b><span id="lockState">꺼져 있어요</span></div><div style="display:flex;gap:6px"><button type="button" class="btn sm gh" id="lkPin">비밀번호</button><button type="button" class="btn sm gh" id="lkPat">패턴</button></div></div>
+      <div class="set-r hidden" id="lkOffRow"><div class="t"><b>잠금 끄기</b></div><button type="button" class="btn sm gh" id="lkOff">끄기</button></div>
+    </div>
+    <div class="set-g">
+      <div class="hd">백업</div>
+      <div class="set-r"><div class="t"><b>전체 백업 저장</b><span>한 달에 한 번 iCloud에 저장해 두세요</span></div><button type="button" class="btn sm gh" id="bJson">저장</button></div>
+      <div class="set-r"><div class="t"><b>백업 불러오기</b><span>JSON 백업 파일 선택</span></div><label class="btn sm gh" style="display:inline-flex;align-items:center">선택<input type="file" accept="application/json,.json" id="bImport" class="hidden"></label></div>
+      <div class="set-r"><div class="t"><b>이 연도 엑셀용 CSV</b></div><button type="button" class="btn sm gh" id="bCsv">저장</button></div>
+    </div>
+    <button type="button" class="btn" id="sSave">설정 저장</button>
+  </section>
   </main>
 
-  <nav class="tabs" aria-label="화면 전환">
-    <div class="in" role="tablist">
-      <button type="button" role="tab" data-tab="home" aria-selected="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19V10M10 19V5M16 19v-6M22 19H2"/></svg>요약</button>
-      <button type="button" role="tab" data-tab="list" aria-selected="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></svg>내역</button>
-      <button type="button" role="tab" data-tab="add" aria-selected="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 8v8M8 12h8"/></svg>기록</button>
-      <button type="button" role="tab" data-tab="set" aria-selected="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M4.2 4.2l2.1 2.1M17.7 17.7l2.1 2.1M2 12h3M19 12h3M4.2 19.8l2.1-2.1M17.7 6.3l2.1-2.1"/></svg>설정</button>
-    </div>
-  </nav>
+  <nav class="tabs" aria-label="화면 전환"><div class="in" role="tablist">
+    <button type="button" role="tab" data-tab="today" aria-selected="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l2.2 5.5L20 9.3l-4.4 3.9 1.3 5.8L12 16l-4.9 3 1.3-5.8L4 9.3l5.8-.8z"/></svg>오늘</button>
+    <button type="button" role="tab" data-tab="home" aria-selected="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7.5" height="9" rx="2"/><rect x="13.5" y="3" width="7.5" height="5" rx="2"/><rect x="13.5" y="11" width="7.5" height="10" rx="2"/><rect x="3" y="15" width="7.5" height="6" rx="2"/></svg>요약</button>
+    <button type="button" role="tab" data-tab="add" class="add" aria-selected="false" aria-label="기록"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="11" fill="currentColor"/><path d="M12 7v10M7 12h10" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg></button>
+    <button type="button" role="tab" data-tab="list" aria-selected="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 6h13M8 12h13M8 18h13M3.5 6h.01M3.5 12h.01M3.5 18h.01"/></svg>내역</button>
+    <button type="button" role="tab" data-tab="set" aria-selected="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 00.3 1.8l.1.1a2 2 0 11-2.8 2.8l-.1-.1a1.7 1.7 0 00-1.8-.3 1.7 1.7 0 00-1 1.5V21a2 2 0 11-4 0v-.1a1.7 1.7 0 00-1.1-1.5 1.7 1.7 0 00-1.8.3l-.1.1a2 2 0 11-2.8-2.8l.1-.1a1.7 1.7 0 00.3-1.8 1.7 1.7 0 00-1.5-1H3a2 2 0 110-4h.1a1.7 1.7 0 001.5-1.1 1.7 1.7 0 00-.3-1.8l-.1-.1a2 2 0 112.8-2.8l.1.1a1.7 1.7 0 001.8.3H9a1.7 1.7 0 001-1.5V3a2 2 0 114 0v.1a1.7 1.7 0 001 1.5 1.7 1.7 0 001.8-.3l.1-.1a2 2 0 112.8 2.8l-.1.1a1.7 1.7 0 00-.3 1.8V9a1.7 1.7 0 001.5 1H21a2 2 0 110 4h-.1a1.7 1.7 0 00-1.5 1z"/></svg>설정</button>
+  </div></nav>
 </div>
 
-<!-- LOCK OVERLAY -->
 <div id="lock" class="hidden" role="dialog" aria-modal="true" aria-labelledby="lkTitle">
+  <img class="logo" src="icon-180.png" alt="">
   <h2 id="lkTitle">내 장부</h2>
   <div class="msg" id="lkMsg" aria-live="polite"></div>
-  <div id="lkPinView" class="hidden" style="display:flex;flex-direction:column;align-items:center;gap:22px">
-    <div class="dots" id="lkDots"></div>
-    <div class="pad" id="lkPad"></div>
-  </div>
-  <div id="lkPatView" class="hidden">
-    <svg class="pat" id="lkPatSvg" viewBox="0 0 270 270" role="img" aria-label="패턴 입력"></svg>
-  </div>
-  <div class="lk-actions" id="lkActions"></div>
+  <div id="lkPinView" class="hidden" style="display:flex;flex-direction:column;align-items:center;gap:24px"><div class="dots" id="lkDots"></div><div class="pad" id="lkPad"></div></div>
+  <div id="lkPatView" class="hidden"><svg class="pat" id="lkPatSvg" viewBox="0 0 270 270" role="img" aria-label="패턴 입력"></svg></div>
+  <div class="lk-a" id="lkActions"></div>
 </div>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
 <script>
-/* ===== TAX ENGINE (pure) ===== */
+/* ===== TAX ENGINE v2 (pure) ===== */
 const TAX = (function(){
-  const BRACKETS = [[14e6,.06,0],[50e6,.15,1.26e6],[88e6,.24,5.76e6],[150e6,.35,15.44e6],[300e6,.38,19.94e6],[500e6,.40,25.94e6],[1e9,.42,35.94e6],[Infinity,.45,65.94e6]];
-  const STD_CREDIT = 70000, MULT = 3.4, SIMPLE_LIMIT = 36e6, BOOK_LIMIT = 75e6, NOBOOK_PENALTY_FROM = 48e6;
-  const fl = n => Math.floor(n);
-  function progressive(base){ base = Math.max(0, base); for(const [cap,rate,ded] of BRACKETS){ if(base <= cap) return fl(base*rate - ded); } return 0; }
-  // s: {bizGross, bizWith, expAll, expMajor}
-  function compute(s, st){
-    const rs = (st.rs||0)/100, rb = (st.rb||0)/100, isNew = !!st.isNew, prev = st.prev||0, g = s.bizGross;
-    const simpleOK = (isNew || prev < SIMPLE_LIMIT) && g < BOOK_LIMIT;
-    const penaltyApplies = !isNew && prev >= NOBOOK_PENALTY_FROM;
-    const simpleInc = fl(g - g*rs);
-    const baseInc = Math.min(fl(g - s.expMajor - g*rb), fl(simpleInc*MULT));
-    const bookInc = fl(g - s.expAll);
-    const ded = 1.5e6*Math.max(1, st.people||1) + (st.extra||0) + (st.pension||0) + (st.otherDed||0);
-    function run(bizInc, method){
+  const BR = [[14e6,.06,0],[50e6,.15,1.26e6],[88e6,.24,5.76e6],[150e6,.35,15.44e6],[300e6,.38,19.94e6],[500e6,.40,25.94e6],[1e9,.42,35.94e6],[Infinity,.45,65.94e6]];
+  const fl = Math.floor;
+  const prog = b => { b = Math.max(0,b); for(const [c,r,d] of BR) if(b<=c) return fl(b*r-d); return 0; };
+  // 근로소득공제
+  const wageDed = g => { if(g<=0) return 0; const d = g<=5e6? g*.7 : g<=15e6? 3.5e6+(g-5e6)*.4 : g<=45e6? 7.5e6+(g-15e6)*.15 : g<=1e8? 12e6+(g-45e6)*.05 : 14.75e6+(g-1e8)*.02; return fl(Math.min(d, 2e7)); };
+  // 근로소득세액공제
+  const wageCredit = (calcW, g) => {
+    if(g<=0 || calcW<=0) return 0;
+    const c = calcW<=1.3e6 ? calcW*.55 : 715000+(calcW-1.3e6)*.3;
+    const lim = g<=33e6 ? 740000 : g<=70e6 ? Math.max(740000-(g-33e6)*.008, 660000) : g<=120e6 ? Math.max(660000-(g-70e6)*.5, 500000) : Math.max(500000-(g-120e6)*.5, 200000);
+    return fl(Math.min(c, lim));
+  };
+  /* in: {
+       wageGross,                         // 근로 총급여(추정 포함)
+       bizGross, bizWith,                 // 3.3% + 개인 간(원천 없음) 사업소득
+       expBook, expMajor,                 // 장부 경비(추정 포함), 기준경비율용 주요경비
+       year, people, extraDed, pensionSelf, otherDed, extraCredit,
+       rs, rb, prev, isNew }
+  */
+  function compute(i){
+    const g = i.wageGross||0, B = i.bizGross||0;
+    const W = Math.max(0, g - wageDed(g));
+    const pr = (i.year||2026) >= 2026 ? .0475 : .045;
+    const pensionW = fl(g*pr), healthW = fl(g*.0403);
+    const baseDed = 1.5e6*Math.max(1, i.people||1) + (i.extraDed||0) + pensionW + healthW;
+    const rs=(i.rs||0)/100, rb=(i.rb||0)/100, prev=i.prev||0, isNew=!!i.isNew;
+    const simpleOK = (isNew || prev < 36e6) && B < 75e6;
+    const penaltyOn = !isNew && prev >= 48e6;
+    const run = (bizInc, method, withSelf) => {
       const bi = Math.max(0, bizInc);
-      const total = bi + (st.otherInc||0);
+      const total = W + bi;
+      const ded = baseDed + (withSelf ? (i.pensionSelf||0) + (i.otherDed||0) : 0);
       const base = Math.max(0, total - ded);
-      const calc = progressive(base);
-      const credit = Math.min(calc, STD_CREDIT + (st.credit||0));
-      const penalty = (method!=='book' && penaltyApplies && total>0) ? fl(calc*(bi/total)*0.2) : 0;
-      const decided = Math.max(0, calc - credit) + penalty;
-      const local = fl(decided*0.1), totalTax = decided + local;
-      const paid = s.bizWith + (st.otherPaid||0);
-      return {method, bizInc:bi, total, ded, base, calc, credit, penalty, decided, local, totalTax, paid, settle: totalTax - paid};
+      const calc = prog(base);
+      const wc = g>0 && total>0 ? wageCredit(fl(calc*W/total), g) : 0;
+      const std = g>0 ? 130000 : 70000;
+      const credit = Math.min(calc, wc + std + (withSelf ? (i.extraCredit||0) : 0));
+      const penalty = (method!=='book' && method!=='wage' && penaltyOn && total>0) ? fl(calc*(bi/total)*.2) : 0;
+      const decided = calc - credit + penalty;
+      const local = fl(decided*.1);
+      return {method, wageGross:g, wageDed:g-W, W, bizInc:bi, total, ded, base, calc, wageCredit:wc, stdCredit:Math.min(std, Math.max(0,calc-wc)), credit, penalty, decided, local, totalTax: decided+local};
+    };
+    // 연말정산으로 이미 낸 근로소득세(추정): 근로소득만 있을 때의 세액
+    const wageOnly = g>0 ? run(0,'wage',false) : null;
+    const wagePaid = wageOnly ? wageOnly.totalTax : 0;
+    const fin = r => { r.paid = (i.bizWith||0) + wagePaid; r.wagePaid = wagePaid; r.settle = r.totalTax - r.paid; return r; };
+    if(B<=0){
+      const r = fin(run(0,'wage',true));
+      return {rows:[r], pick:r, simpleOK:false, onlyWage:true, wageOnly};
     }
+    const simpleInc = fl(B - B*rs);
+    const baseInc = Math.min(fl(B - (i.expMajor||0) - B*rb), fl(simpleInc*3.4));
+    const bookInc = fl(B - (i.expBook||0));
     const rows = [];
-    if(simpleOK) rows.push(run(simpleInc,'simple'));
-    rows.push(run(baseInc,'base'));
-    rows.push(run(bookInc,'book'));
+    if(simpleOK) rows.push(fin(run(simpleInc,'simple',true)));
+    rows.push(fin(run(baseInc,'base',true)));
+    rows.push(fin(run(bookInc,'book',true)));
     let pick = rows[0]; for(const r of rows) if(r.settle < pick.settle) pick = r;
-    return {rows, pick, simpleOK, penaltyApplies};
+    return {rows, pick, simpleOK, onlyWage:false, wageOnly};
   }
-  return {compute, progressive};
+  return {compute, prog, wageDed, wageCredit};
 })();
+if(typeof module!=='undefined') module.exports = TAX;
 
-/* ===== CATEGORIES & DEDUCTION GUIDE ===== */
-const SRC = {company:{n:'회사', w:.033, tax:1}, school:{n:'학교', w:.033, tax:1}, etc:{n:'기타', w:0, tax:1}, wage:{n:'급여', w:0, tax:0}, corp:{n:'법인', w:0, tax:0}};
-const taxable = e => (SRC[e.src]||SRC.etc).tax && !e.notax;
+/* ===== SAJU ENGINE (pure) ===== */
+const SAJU = (function(){
+  const GH = '甲乙丙丁戊己庚辛壬癸', JH = '子丑寅卯辰巳午未申酉戌亥';
+  const GK = '갑을병정무기경신임계', JK = '자축인묘진사오미신유술해';
+  const EL = ['목','화','토','금','수'];                 // 0..4
+  const EH = ['木','火','土','金','水'];
+  const stemEl = s => Math.floor(s/2);                    // 甲乙木 丙丁火 戊己土 庚辛金 壬癸水
+  const branchEl = [4,2,0,0,2,1,1,2,3,3,2,4];             // 子水 丑土 寅木 卯木 辰土 巳火 午火 未土 申金 酉金 戌土 亥水
+  const branchYang = b => b%2===0;
+  // 절입일(근사, ±1일): 각 지지 월이 시작되는 날
+  const TERM = [[1,6,1],[2,4,2],[3,6,3],[4,5,4],[5,6,5],[6,6,6],[7,7,7],[8,8,8],[9,8,9],[10,8,10],[11,7,11],[12,7,0]]; // [월,일,지지]
+  const MS = 86400000;
+  const utcDays = (y,m,d) => Math.floor(Date.UTC(y,m-1,d)/MS);
+  const BASE = utcDays(1900,1,1);                          // 1900-01-01 = 甲戌(10)
+  const dayIdx = (y,m,d) => (((10 + utcDays(y,m,d) - BASE) % 60) + 60) % 60;
+  const pillar = (s,b) => ({s, b, h: GH[s]+JH[b], k: GK[s]+JK[b]});
+  function chart(y,m,d,hh,mm){
+    const before = (mo,da) => m<mo || (m===mo && d<da);
+    const sy = before(2,4) ? y-1 : y;
+    const ys = ((sy-4)%10+10)%10, yb = ((sy-4)%12+12)%12;
+    let mb = 1; // 丑 by default (Jan before 소한 → 子)
+    if(before(1,6)) mb = 0;
+    else for(const [mo,da,br] of TERM){ if(!before(mo,da)) mb = br; }
+    if(m===1 && !before(1,6)) mb = 1;
+    const off = (mb - 2 + 12) % 12;
+    const ms = (((ys%5)*2+2) + off) % 10;
+    const di = dayIdx(y,m,d), ds = di%10, db = di%12;
+    const P = {year: pillar(ys,yb), month: pillar(ms,mb), day: pillar(ds,db), hour: null};
+    if(hh!=null && hh!=='' && !isNaN(hh)){
+      const hb = Math.floor(((+hh)*60 + (+mm||0) + 30)/120) % 12;
+      const hs = (((ds%5)*2) + hb) % 10;
+      P.hour = pillar(hs,hb);
+    }
+    const count = [0,0,0,0,0];
+    for(const p of [P.year,P.month,P.day,P.hour]) if(p){ count[stemEl(p.s)]++; count[branchEl[p.b]]++; }
+    // 행운 오행: 가장 적은 오행 중 일간 기준 식상 > 재성 > 관성 > 인성 > 비겁 순
+    const me = stemEl(ds), min = Math.min(...count);
+    const order = [(me+1)%5,(me+2)%5,(me+3)%5,(me+4)%5,me];
+    const lucky = order.filter(e=>count[e]===min);
+    return {P, count, me, lucky, missing: count.map((c,i)=>c===0?i:-1).filter(i=>i>=0)};
+  }
+  // 십신: 일간(ds) 기준 상대 천간(x)
+  function tenGod(ds, x){
+    const a = stemEl(ds), b = stemEl(x), same = (ds%2)===(x%2);
+    if(a===b) return same?'비견':'겁재';
+    if((a+1)%5===b) return same?'식신':'상관';
+    if((a+2)%5===b) return same?'편재':'정재';
+    if((b+2)%5===a) return same?'편관':'정관';
+    return same?'편인':'정인';
+  }
+  const SIX = [[0,1],[2,11],[3,10],[4,9],[5,8],[6,7]];
+  const CLASH = b1 => (b1+6)%12;
+  const TRI = [[8,0,4],[2,6,10],[5,9,1],[11,3,7]];
+  function branchRel(a,b){
+    if(a===b) return '';
+    if(CLASH(a)===b) return '충';
+    if(SIX.some(([x,y])=>(x===a&&y===b)||(x===b&&y===a))) return '합';
+    if(TRI.some(t=>t.includes(a)&&t.includes(b))) return '반합';
+    return '';
+  }
+  const TG = {
+    '비견':{r:[3,2,3,4], t:'나와 같은 기운이 들어오는 날이에요. 함께하면 힘이 되지만 은근한 경쟁도 생겨요.', m:'공동으로 쓰는 돈은 나눌 몫을 분명히 해두세요.'},
+    '겁재':{r:[2,1,3,3], t:'에너지는 넘치지만 돈이 새기 쉬운 날이에요.', m:'돈을 빌려주거나 충동구매하는 건 오늘은 피하세요.'},
+    '식신':{r:[4,3,4,4], t:'표현력이 살아나는 날이에요. 강의·글쓰기·발표가 술술 풀려요.', m:'좋아하는 일에 쓰는 돈은 만족도가 높아요.'},
+    '상관':{r:[3,3,4,2], t:'아이디어가 번뜩이는 날이에요. 다만 말이 앞서 오해가 생길 수 있어요.', m:'계약·조건 이야기는 문서로 남겨두세요.'},
+    '편재':{r:[4,5,3,3], t:'뜻밖의 기회와 수입이 보이는 날이에요. 움직일수록 운이 커져요.', m:'큰 거래는 숫자를 한 번 더 확인하면 손해가 없어요.'},
+    '정재':{r:[4,4,4,3], t:'성실함이 그대로 돈으로 돌아오는 날이에요.', m:'정산·장부 정리를 하기에 가장 좋은 날이에요.'},
+    '편관':{r:[2,2,3,2], t:'급한 일과 압박이 몰리기 쉬운 날이에요. 한 번에 하나씩 처리하세요.', m:'무리한 약속이나 보증은 미뤄두세요.'},
+    '정관':{r:[4,3,5,4], t:'인정받고 신뢰를 얻는 날이에요. 공식적인 자리에서 빛나요.', m:'서류·신청·제안을 내기에 좋은 날이에요.'},
+    '편인':{r:[3,2,3,2], t:'생각이 깊어지는 날이에요. 새로운 공부엔 좋지만 큰 결정은 하루 미뤄요.', m:'구독·강의 결제는 정말 쓸지 한 번 더 생각해 보세요.'},
+    '정인':{r:[5,3,4,5], t:'도움과 배움이 들어오는 날이에요. 귀인을 만나거나 좋은 소식을 들을 수 있어요.', m:'문서·계약 운이 좋아요. 미뤄둔 서류를 처리해 보세요.'}
+  };
+  const COLOR = [[['초록','#3E9B5B'],['청록','#2A8C8C']],[['빨강','#D6453D'],['주황','#EE8A3A']],[['노랑','#E2B23A'],['베이지','#D8C3A0']],[['흰색','#F4F2EC'],['은색','#BFC4CC']],[['검정','#2A2D34'],['남색','#2E3D6B']]];
+  const DIR = ['동쪽','남쪽','중앙(가까운 곳)','서쪽','북쪽'];
+  const NUMS = [[3,8],[2,7],[5,0],[4,9],[1,6]];
+  const ITEM = [['화분','나무 소품','초록 노트'],['빨간 펜','향초','따뜻한 차'],['도자기 컵','가죽 지갑','베이지 스카프'],['은반지','손목시계','금속 볼펜'],['텀블러','검은 지갑','물 한 잔']];
+  const DESC = ['나무처럼 곧게 자라는 성향','불처럼 밝고 따뜻한 성향','흙처럼 묵직하고 믿음직한 성향','쇠처럼 단단하고 결단력 있는 성향','물처럼 유연하고 지혜로운 성향'];
+  function today(c, y, m, d, rnd){
+    const ti = dayIdx(y,m,d), ts = ti%10, tb = ti%12;
+    const god = tenGod(c.P.day.s, ts);
+    const rel = branchRel(c.P.day.b, tb);
+    const g = TG[god];
+    let r = g.r.slice();
+    const todayEls = [stemEl(ts), branchEl[tb]];
+    const helps = todayEls.some(e=>c.lucky.includes(e));
+    if(rel==='합'||rel==='반합'){ r[0]++; r[3]++; }
+    if(rel==='충'){ r[0]--; r[3]--; }
+    const health = Math.max(1, Math.min(5, 3 + (helps?1:0) - (rel==='충'?1:0)));
+    r = r.map(v=>Math.max(1,Math.min(5,v)));
+    const relText = rel==='충' ? '오늘 일진이 내 일지와 충(沖)해요. 이동·변동수가 있으니 일정은 여유 있게 잡으세요.'
+                  : rel==='합' ? '오늘 일진이 내 일지와 합(合)을 이뤄요. 사람 사이 일이 부드럽게 풀려요.'
+                  : rel==='반합' ? '오늘 일진이 내 일지와 반합을 이뤄요. 협력하면 힘이 커져요.' : '';
+    // 행운 오행: 오늘 일진에 행운 오행이 있으면 그것, 아니면 1순위
+    const le = c.lucky.find(e=>todayEls.includes(e)) ?? c.lucky[0];
+    const col = COLOR[le][Math.floor(rnd()*2)];
+    const digits = NUMS[le];
+    const pool = []; for(let n=1;n<=45;n++) if(digits.includes(n%10)) pool.push(n);
+    const nums = []; while(nums.length<3 && pool.length){ nums.push(pool.splice(Math.floor(rnd()*pool.length),1)[0]); }
+    return {day: pillar(ts,tb), god, rel, relText, text: g.t, money: g.m, stars: [['총운',r[0]],['재물운',r[1]],['일·학업운',r[2]],['대인운',r[3]],['건강운',health]],
+            luckyEl: le, color: col, dir: DIR[le], nums: nums.sort((a,b)=>a-b), item: ITEM[le][Math.floor(rnd()*3)], helps};
+  }
+  return {chart, today, tenGod, dayIdx, EL, EH, DESC, stemEl, branchEl, GH, JH, GK, JK};
+})();
+if(typeof module!=='undefined') module.exports = SAJU;
+
+
+/* ===== CONSTANTS ===== */
+const SRC = {chunha:{n:'㈜천하', c:'var(--c-chunha)', kind:'corp'}, company:{n:'회사', c:'var(--c-company)', kind:'biz'}, school:{n:'학교', c:'var(--c-school)', kind:'biz'}, etc:{n:'기타', c:'var(--c-etc)', kind:'free'}};
+const KIND = {
+  wage:{n:'급여(근로)', tax:'wage', w:0, d:'월급. 연말정산 후 5월에 합산돼요'},
+  biz:{n:'3.3% 사업소득', tax:'biz', w:.033, d:'강의료·자문료 등'},
+  free:{n:'원천징수 없음', tax:'biz', w:0, d:'개인 간 거래. 사업소득으로 합산돼요'},
+  corp:{n:'법인 매출', tax:'none', w:0, d:'와이엔글로벌 매출(부가세 포함). 개인 세금 제외'},
+  none:{n:'소득 아님', tax:'none', w:0, d:'송금·환불·빌린 돈 등. 세금 제외'}
+};
+const GRP = {fixed:{n:'고정비', c:'var(--fix)'}, var:{n:'변동비', c:'var(--var)'}, tax:{n:'세금·이자', c:'var(--tax)'}};
+// [이름, 추정 업무비율]
 const CATS = {
-  fixed: [
-    ['월세','part','주거용이면 안 돼요. 사업장으로 쓰는 작업실 임차료만 경비(주요경비)예요.'],
-    ['관리비','no','주거용 관리비는 안 돼요. 사업장 관리비만 가능해요.'],
-    ['전기','part','재택 업무분만 합리적으로 나눠 넣을 수 있어요. 집 전체 요금은 안 돼요.'],
-    ['수도','no','가정용이라 보통 인정되지 않아요.'],
-    ['통신료','part','업무용 회선·인터넷은 경비예요. 가족과 함께 쓰면 업무 사용분만 넣으세요.'],
-    ['가스','no','가정용이라 보통 인정되지 않아요.'],
-    ['보험료','part','지역가입 건강보험료·장기요양보험료는 경비예요. 국민연금은 설정의 소득공제에, 실손·자동차·종신 등 개인 보험은 안 돼요.'],
-    ['렌탈','no','정수기 등 가정용 렌탈은 경비가 아니에요.'],
-    ['차량할부','no','할부 원금은 경비가 아니에요. 업무용 차량은 장부 신고 때 감가상각·유지비 일부로 처리해요.'],
-    ['세무사','part','3.3% 소득 신고 수수료는 경비예요. 법인(와이엔글로벌) 기장료는 법인 비용이에요.'],
-    ['4대보험료','no','월급에서 빠진 근로자 부담분은 회사 연말정산에서 공제돼요. 지역 건강보험료는 ‘보험료’에 기록하세요.'],
-    ['세금','no','소득세·법인세·부가세·지방세는 경비가 아니에요.'],
-    ['대출이자','part','개인 사업(3.3% 업무) 관련 대출 이자만 경비예요. 법인 대출 이자는 법인 비용이에요.']
-  ],
-  var: [
-    ['쇼핑/온라인','part','강의·집필에 쓰는 도서, 장비, 소모품만 경비예요. 개인 쇼핑은 안 돼요.'],
-    ['편의점/마트','no','생활비라 보통 안 돼요. 업무 소모품만 따로 영수증이 있으면 가능해요.'],
-    ['외식/배달','part','거래처·업무 관련 식사(접대비)만 가능해요. 본인 식사는 안 돼요.'],
-    ['교통/정비','part','강의·업무 이동 교통비는 경비예요. 차량비는 업무 사용분만 가능해요.'],
-    ['의료/병원','no','사업경비가 아니에요. 사업소득만 있으면 의료비 세액공제도 없어요.'],
-    ['중국송금','no','가족·개인 송금은 경비가 아니에요. 물품 대금이면 그 사업의 장부에서 처리하세요.'],
-    ['SMS','part','업무용 문자 발송 비용이면 경비, 개인 결제 알림 등은 아니에요.'],
-    ['기타','part','내용에 따라 달라요. 상세 내용을 꼭 적어두세요.']
-  ]
+  fixed:[['월세',0],['관리비',0],['전기',.2],['가스',0],['수도',0],['통신료',.5],['보험료',0],['건강보험(지역)',1],['4대보험료',0],['렌탈',0],['차량할부',0],['세무사',0]],
+  var:[['쇼핑/온라인',.1],['편의점/마트',0],['외식/배달',.1],['교통/정비',.3],['의료/병원',0],['중국송금',0],['SMS',.5],['기타',0]],
+  tax:[['세금',0],['대출이자',0]]
 };
-const LV = {ok:['○','ok','인정'], part:['△','part','업무 관련분만'], no:['✕','no','인정 안 됨']};
-function catInfo(grp, cat){ return (CATS[grp]||[]).find(c=>c[0]===cat) || [cat,'part','']; }
-
-/* ===== STATE & STORAGE ===== */
-const IND = {
-  '940903': {rs:61.7, rb:15.4, note:'940903 강사: 단순 61.7%, 기준 15.4% (2024·2025 귀속 고시 기준). 매년 3월 고시를 확인하세요.'},
-  '940100': {rs:64.1, rb:18.4, note:'940100 작가: 단순 64.1%, 기준 18.4% (확인 필요). 홈택스 신고 안내문의 경비율로 고쳐 주세요.'},
-  'custom': {rs:null, rb:null, note:'신고 안내문이나 홈택스에서 확인한 경비율을 입력하세요.'}
-};
-const DEF_SET = {ind:'940903', rs:61.7, rb:15.4, prev:0, isNew:false, people:1, extra:0, pension:0, otherDed:0, credit:0, otherInc:0, otherPaid:0, more:0, wageGross:0};
-const thisYear = new Date().getFullYear();
-let year = thisYear, cache = {}, backend = 'local', dbRef = null, lastFromDb = false, dl = null;
+const RATE = {}; for(const g in CATS) for(const [c,r] of CATS[g]) RATE[g+'|'+c]=r;
+const IND = {'940903':{rs:61.7,rb:15.4,n:'2024·2025 귀속 고시'},'940100':{rs:64.1,rb:18.4,n:'확인 필요'},'custom':{rs:null,rb:null,n:'신고 안내문 값'}};
+const DEF = {ind:'940903',rs:61.7,rb:15.4,people:1,pensionSelf:0,otherDed:0,credit:0,more:0,ratio:88};
 const LS = 'ledger33:v1:';
+const thisYear = new Date().getFullYear();
 
+/* ===== UTIL ===== */
 const $ = id => document.getElementById(id);
-const won = n => (Math.round(n)||0).toLocaleString('ko-KR') + '원';
-const man = n => { const v = Math.round(n)||0; return Math.abs(v)>=1e4 ? (Math.round(v/1e3)/10).toLocaleString('ko-KR')+'만' : v.toLocaleString('ko-KR'); };
-const num = v => { const n = parseFloat(String(v??'').replace(/[^0-9.\-]/g,'')); return isFinite(n)? n : 0; };
-const fmtIn = el => { const n = num(el.value); el.value = n ? Math.round(n).toLocaleString('ko-KR') : ''; };
-const esc = t => String(t??'').replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-
-function yearData(y){
-  if(!cache[y]) cache[y] = {entries:[], settings:{...DEF_SET}};
-  if(!cache[y].settings) cache[y].settings = {...DEF_SET};
-  if(!cache[y].entries) cache[y].entries = [];
-  return cache[y];
-}
-function lsGet(k){ try{ const t = localStorage.getItem(LS+k); return t? JSON.parse(t) : null; }catch(e){ return null; } }
-function lsSet(k,d){ try{ localStorage.setItem(LS+k, JSON.stringify(d)); return true; }catch(e){ return false; } }
-function withTimeout(p, ms){ return Promise.race([p, new Promise((_,rej)=>setTimeout(()=>rej(new Error('timeout')), ms))]); }
-function setStatus(t){ $('status').textContent = t; }
+const won = n => (Math.round(n)||0).toLocaleString('ko-KR')+'원';
+const man = n => { const v=Math.round(n)||0, a=Math.abs(v); if(a>=1e8) return (v/1e8).toFixed(a>=1e9?0:1).replace(/\.0$/,'')+'억'; if(a>=1e4) return Math.round(v/1e4).toLocaleString('ko-KR')+'만'; return v.toLocaleString('ko-KR'); };
+const num = v => { const n=parseFloat(String(v??'').replace(/[^0-9.\-]/g,'')); return isFinite(n)?n:0; };
+const esc = t => String(t??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const fmtField = el => { const n=num(el.value); el.value = n? Math.round(n).toLocaleString('ko-KR') : ''; };
+const pad2 = x => String(x).padStart(2,'0');
+const ymd = d => `${d.getFullYear()}-${pad2(d.getMonth()+1)}-${pad2(d.getDate())}`;
 function toast(t){ const el=$('toast'); el.textContent=t; el.classList.add('on'); clearTimeout(toast._t); toast._t=setTimeout(()=>el.classList.remove('on'),1800); }
+function lsGet(k){ try{ const t=localStorage.getItem(LS+k); return t?JSON.parse(t):null; }catch(e){ return null; } }
+function lsSet(k,v){ try{ localStorage.setItem(LS+k, JSON.stringify(v)); return true; }catch(e){ return false; } }
+const newId = () => Date.now().toString(36)+Math.random().toString(36).slice(2,6);
 
+/* ===== DATA (with migration from older formats) ===== */
+let year = thisYear, cache = {}, backend='local', dbRef=null, lastFromDb=false, dl=null;
+function normEntry(e){
+  if(e.k==='in'){
+    if(!e.kind){
+      if(e.src==='corp'){ e.src='chunha'; e.kind='corp'; }
+      else if(e.src==='wage'){ e.src='school'; e.kind='wage'; e.net = e.net ?? e.gross; e.gross = 0; e.with = 0; }
+      else if(e.src==='school'||e.src==='company'){ e.kind='biz'; }
+      else { e.src='etc'; e.kind = e.notax ? 'none' : (e.type==='etc' ? 'biz' : 'free'); }
+      if(e.who && !e.memo) e.memo = e.who;
+    }
+    if(!SRC[e.src]) e.src='etc';
+    e.gross = e.gross||0; e.with = e.with||0;
+    if(e.net==null) e.net = e.kind==='wage' ? (e.gross - e.with) : (e.gross - e.with);
+  } else {
+    if(e.grp!=='tax' && (e.cat==='세금'||e.cat==='대출이자')) e.grp='tax';
+    if(!e.grp) e.grp='var';
+    if(e.biz===false) delete e.biz;
+    if(e.biz===true && e.rate==null){ e.rate = (e.ratio??100)/100; }
+    delete e.biz; delete e.ratio;
+  }
+  return e;
+}
+function yd(y){
+  if(!cache[y]) cache[y] = {entries:[], settings:{...DEF}};
+  const d = cache[y]; d.entries = (d.entries||[]).map(normEntry); d.settings = {...DEF, ...(d.settings||{})};
+  if(d.settings.ratio==null) d.settings.ratio = 88;
+  return d;
+}
+function withTimeout(p,ms){ return Promise.race([p,new Promise((_,r)=>setTimeout(()=>r(new Error('t')),ms))]); }
 async function load(y){
-  let d = null; lastFromDb = false;
-  if(backend==='db' && dbRef){
-    try{
-      const snap = await withTimeout(dbRef.doc('y'+y).get(), 10000);
-      if(snap && snap.exists){ const b = snap.data(); if(b){ d = JSON.parse(JSON.stringify(b)); lastFromDb = true; } }
-    }catch(e){ backend='local'; }
-  }
+  let d=null; lastFromDb=false;
+  if(backend==='db'&&dbRef){ try{ const s=await withTimeout(dbRef.doc('y'+y).get(),10000); if(s&&s.exists){ const b=s.data(); if(b){ d=JSON.parse(JSON.stringify(b)); lastFromDb=true; } } }catch(e){ backend='local'; } }
   if(!d) d = lsGet(y);
-  if(!d){
-    const p = cache[y-1] || lsGet(y-1);
-    d = {entries:[], settings: p && p.settings ? {...p.settings, prev: sumBiz(p.entries||[]), isNew:false, more:0} : {...DEF_SET}};
-  }
-  cache[y] = d; yearData(y);
-  setStatus(backend==='db' ? '내 계정에 저장돼요 (나만 볼 수 있어요)' : '이 기기에 저장돼요 · 가끔 백업해 두세요');
+  if(!d){ const p = cache[y-1]||lsGet(y-1); d = {entries:[], settings: p&&p.settings ? {...DEF, ...p.settings, more:0} : {...DEF}}; }
+  cache[y]=d; yd(y);
+  if(!cache[y-1]){ const p=lsGet(y-1); if(p){ cache[y-1]=p; yd(y-1); } }
+  $('status').textContent = backend==='db' ? '내 계정에 저장돼요' : '';
 }
 let saving = Promise.resolve();
 function save(y=year){
-  const d = JSON.parse(JSON.stringify(yearData(y)));
-  lsSet(y, d);
-  if(backend==='db' && dbRef){
-    saving = saving.then(()=>dbRef.doc('y'+y).set(d)).catch(e=>{
-      setStatus(e && e.code==='quota_exceeded' ? '저장 공간이 가득 찼어요. 백업 후 정리해 주세요.' : '계정 저장에 실패했어요. 이 기기에는 저장됐어요.');
-    });
-  }
+  const d = JSON.parse(JSON.stringify(yd(y))); lsSet(y,d);
+  if(backend==='db'&&dbRef) saving = saving.then(()=>dbRef.doc('y'+y).set(d)).catch(()=>{ $('status').textContent='계정 저장 실패 · 이 기기에는 저장됐어요'; });
 }
 
-/* ===== SUMMARY ===== */
-function sumBiz(entries){ return entries.filter(e=>e.k==='in'&&taxable(e)).reduce((a,e)=>a+(e.gross||0),0); }
-function wageInc(g){ g=g||0; if(g<=0) return 0; let d = g<=5e6? g*.7 : g<=15e6? 3.5e6+(g-5e6)*.4 : g<=45e6? 7.5e6+(g-15e6)*.15 : g<=1e8? 12e6+(g-45e6)*.05 : 14.75e6+(g-1e8)*.02; return Math.floor(Math.max(0, g-Math.min(d,2e7))); }
-function bizAmt(e){ return e.biz ? Math.round((e.amt||0) * Math.min(100, Math.max(0, e.ratio ?? 100))/100) : 0; }
-function summarize(d){
-  const s = {bizGross:0,bizWith:0,untaxed:0,allIn:0,wage:0,expAll:0,expMajor:0,spend:0,fixed:0,var:0,inM:Array(12).fill(0),outM:Array(12).fill(0),bySrc:{},byCat:{}};
+/* ===== ANALYSIS ===== */
+const isBizIncome = e => e.k==='in' && KIND[e.kind] && KIND[e.kind].tax==='biz';
+function analyze(y){
+  const d = yd(y), st = d.settings, ratio = Math.min(.99, Math.max(.5, (st.ratio||88)/100));
+  const A = {inNet:0,outAll:0,inM:Array(12).fill(0),outM:Array(12).fill(0),bySrc:{},byKind:{},byGrp:{fixed:0,var:0,tax:0},byCat:{},
+             wageNet:0,wageGross:0,bizGross:0,bizWith:0,expBook:0,expMajor:0,bizStart:null,count:d.entries.length};
+  for(const e of d.entries) if(isBizIncome(e)){ if(!A.bizStart || e.date < A.bizStart) A.bizStart = e.date; }
   for(const e of d.entries){
     const m = parseInt((e.date||'').slice(5,7),10)-1;
     if(e.k==='in'){
-      if(taxable(e)){ s.bizGross += e.gross; s.bizWith += e.with; } else s.untaxed += e.gross;
-      s.allIn += e.gross; if(e.src==='wage') s.wage += e.gross;
-      s.bySrc[e.src||'etc'] = (s.bySrc[e.src||'etc']||0) + e.gross;
-      if(m>=0&&m<12) s.inM[m]+=e.gross;
+      A.inNet += e.net; if(m>=0) A.inM[m]+=e.net;
+      const s = A.bySrc[e.src] ||= {net:0,kinds:{}}; s.net += e.net; s.kinds[e.kind]=(s.kinds[e.kind]||0)+e.net;
+      A.byKind[e.kind] = (A.byKind[e.kind]||0) + e.net;
+      if(e.kind==='wage'){ A.wageNet += e.net; A.wageGross += e.gross>0 ? e.gross : Math.round(e.net/ratio); }
+      else if(isBizIncome(e)){ A.bizGross += e.gross; A.bizWith += e.with; }
     } else {
-      s.spend += e.amt; s[e.grp==='fixed'?'fixed':'var'] += e.amt;
-      const key = e.grp+'|'+e.cat; s.byCat[key] = (s.byCat[key]||0) + e.amt;
-      const b = bizAmt(e); s.expAll += b; if(b && e.grp==='fixed' && e.cat==='월세') s.expMajor += b;
-      if(m>=0&&m<12) s.outM[m]+=e.amt;
+      A.outAll += e.amt; if(m>=0) A.outM[m]+=e.amt;
+      A.byGrp[e.grp] = (A.byGrp[e.grp]||0) + e.amt;
+      const k = e.grp+'|'+e.cat; A.byCat[k] = (A.byCat[k]||0) + e.amt;
+      if(A.bizStart && e.date >= A.bizStart){
+        const r = e.rate!=null ? e.rate : (RATE[k]??0);
+        const b = Math.round(e.amt*r); A.expBook += b; if(e.cat==='월세') A.expMajor += b;
+      }
     }
   }
-  return s;
+  const prevD = cache[y-1] ? yd(y-1) : null;
+  A.prev = prevD ? prevD.entries.filter(isBizIncome).reduce((a,e)=>a+e.gross,0) : 0;
+  A.isNew = A.prev===0;
+  const more = st.more||0;
+  A.tax = TAX.compute({wageGross:A.wageGross, bizGross:A.bizGross+more, bizWith:A.bizWith+Math.floor(more*.033), expBook:A.expBook, expMajor:A.expMajor,
+    year:y, people:st.people, pensionSelf:st.pensionSelf, otherDed:st.otherDed, extraCredit:st.credit, rs:st.rs, rb:st.rb, prev:A.prev, isNew:A.isNew});
+  A.more = more;
+  return A;
 }
 
-/* ===== RENDER ===== */
-const MNAME = {simple:'단순경비율', base:'기준경비율', book:'장부(실제 경비)'};
-function render(){
-  $('yLbl').textContent = year; $('hYear').textContent = year+1;
-  const d = yearData(year), st0 = d.settings, s = summarize(d);
-  const st = {...st0, otherInc: st0.otherInc || wageInc(st0.wageGross)};
-  const more = st.more||0;
-  const sp = {...s, bizGross: s.bizGross+more, bizWith: s.bizWith + Math.floor(more*0.033)};
-  const r = TAX.compute(sp, st), p = r.pick, hasData = sp.bizGross > 0;
-  $('sGross').textContent = man(s.allIn); $('sSpend').textContent = man(s.spend); $('sBiz').textContent = man(s.expAll);
-  if(!hasData){
-    $('hBig').textContent = s.allIn>0 ? '3.3% 소득 없음' : '-'; $('hMethod').textContent='-'; $('hNote').textContent = '수입을 기록하면 환급·추가납부 예상액이 나와요.';
-  } else {
-    $('hBig').textContent = (p.settle<0 ? '환급 ' : '추가납부 ') + won(Math.abs(p.settle));
-    $('hMethod').textContent = MNAME[p.method];
-    $('hNote').textContent = (more? '연말까지 예상 수입 '+man(more)+'원 포함 · ' : '') + '총 세금 '+won(p.totalTax)+' − 이미 낸 세금 '+won(p.paid)
-      + (s.wage>0 && !st.otherInc ? ' · 급여(근로소득)가 있어요. 설정에 총급여를 넣어야 정확해요.' : '');
+/* ===== RENDER: SUMMARY ===== */
+const MN = {simple:'단순경비율', base:'기준경비율', book:'장부(실제 경비)', wage:'근로소득만'};
+function srcLabel(k){ return SRC[k] ? SRC[k].n : k; }
+function renderHome(){
+  const A = analyze(year), T = A.tax, p = T.pick;
+  $('hYear').textContent = (year+1)+'년 5월 종합소득세';
+  const hasBiz = A.bizGross + A.more > 0;
+  if(!A.count){ $('hMethod').textContent='-'; $('hAmt').textContent='아직 기록이 없어요'; $('hDesc').textContent='아래 + 버튼으로 첫 기록을 남겨보세요.'; }
+  else if(!hasBiz && A.wageGross>0){ $('hMethod').textContent='신고 대상 아님'; $('hAmt').innerHTML='연말정산으로 끝나요'; $('hDesc').textContent='올해는 3.3%·개인 간 수입이 없어 5월 신고가 필요 없어요. 급여 세금은 회사·학교 연말정산에서 정산돼요.'; }
+  else if(!hasBiz){ $('hMethod').textContent='신고 대상 아님'; $('hAmt').textContent='개인 세금 없음'; $('hDesc').textContent='법인 매출 등 개인 소득이 아닌 수입만 있어요.'; }
+  else {
+    const ref = p.settle<0;
+    $('hMethod').textContent = MN[p.method]+' 기준';
+    $('hAmt').innerHTML = (ref?'환급 예상 ':'추가납부 예상 ')+'<em>'+won(Math.abs(p.settle))+'</em>';
+    $('hDesc').textContent = `총 세금 ${man(p.totalTax)}원 중 ${man(p.paid)}원은 이미 냈어요` + (A.wageGross? ' (급여 원천징수 추정 포함)':'') + (A.more? ` · 예상 수입 ${man(A.more)}원 포함`:'');
   }
-  const mx = Math.max(1, ...s.inM, ...s.outM);
-  $('bars').innerHTML = s.inM.map((v,i)=>`<div class="bar" title="${i+1}월 수입 ${won(v)} / 지출 ${won(s.outM[i])}"><div class="st"><i class="a" style="height:${Math.round(v/mx*100)}%"></i><i class="b" style="height:${Math.round(s.outM[i]/mx*100)}%"></i></div><b>${i+1}</b></div>`).join('');
-  // income breakdown
-  const srcs = Object.entries(s.bySrc).sort((a,b)=>b[1]-a[1]);
-  const imx = Math.max(1, ...srcs.map(x=>x[1]));
-  $('incBrk').innerHTML = srcs.length ? srcs.map(([k,v])=>`<div class="ln"><span>${SRC[k]?SRC[k].n:k}</span><div class="tr"><i style="width:${Math.round(v/imx*100)}%"></i></div><b>${man(v)}</b></div>`).join('') : '<div class="empty" style="padding:8px 0">수입 기록이 없어요</div>';
-  // expense breakdown
-  const cats = Object.entries(s.byCat).sort((a,b)=>b[1]-a[1]);
-  const emx = Math.max(1, ...cats.map(x=>x[1]));
-  $('expBrk').innerHTML = cats.length ? `<div class="hint" style="margin-bottom:2px">고정비 ${won(s.fixed)} · 변동비 ${won(s.var)}</div>` + cats.map(([k,v])=>{ const [g,c]=k.split('|'); return `<div class="ln"><span>${esc(c)}</span><div class="tr"><i class="${g==='fixed'?'fx':'vr'}" style="width:${Math.round(v/emx*100)}%"></i></div><b>${man(v)}</b></div>`; }).join('') : '<div class="empty" style="padding:8px 0">지출 기록이 없어요</div>';
-  // compare
-  $('cmpBody').innerHTML = hasData ? r.rows.map(x=>`<tr class="${x===p?'best':''}"><td>${MNAME[x.method]}${x.penalty?'<span class="tag">가산세</span>':''}</td><td>${man(x.bizInc)}</td><td>${man(x.totalTax)}</td><td>${x.settle<0?'−':'+'}${man(Math.abs(x.settle))}</td></tr>`).join('')
-    + (r.simpleOK? '' : `<tr><td colspan="4" class="hint" style="text-align:left">단순경비율은 직전 연도 수입 3,600만 원 이상이거나 올해 7,500만 원 이상이라 쓸 수 없어요.</td></tr>`)
-    : `<tr><td colspan="4" class="empty">아직 수입 기록이 없어요</td></tr>`;
-  $('dTag').textContent = MNAME[p.method];
-  const L = [['사업소득 수입', won(sp.bizGross)],['필요경비', '−'+won(sp.bizGross-p.bizInc)],['사업소득금액', won(p.bizInc)]];
-  if(st.otherInc) L.push(['다른 종합소득금액', won(st.otherInc)]);
-  L.push(['종합소득금액', won(p.total)],['소득공제', '−'+won(p.ded)],['과세표준', won(p.base)],['산출세액', won(p.calc)],['세액공제', '−'+won(p.credit)]);
-  if(p.penalty) L.push(['무기장가산세', '+'+won(p.penalty)]);
-  L.push(['결정세액', won(p.decided)],['지방소득세 (10%)', won(p.local)],['총 세금', won(p.totalTax)],['이미 낸 세금', '−'+won(p.paid)],[p.settle<0?'예상 환급':'예상 추가납부', won(Math.abs(p.settle))]);
-  $('detail').innerHTML = L.map(([k,v])=>`<div><span>${k}</span><b>${v}</b></div>`).join('');
-  renderList();
+  $('sIn').textContent = man(A.inNet); $('sOut').textContent = man(A.outAll);
+  const net = A.inNet - A.outAll; $('sNet').textContent = (net<0?'−':'')+man(Math.abs(net)); $('sNet').style.color = net<0?'var(--exp)':'var(--ink)';
+  const mx = Math.max(1,...A.inM,...A.outM);
+  $('chart').innerHTML = A.inM.map((v,i)=>`<div class="c" title="${i+1}월 수입 ${won(v)} · 지출 ${won(A.outM[i])}"><div class="bs"><i class="a" style="height:${v/mx*100}%"></i><i class="b" style="height:${A.outM[i]/mx*100}%"></i></div><b>${i+1}</b></div>`).join('');
+  // income by source
+  const srcs = Object.keys(SRC).filter(k=>A.bySrc[k]).map(k=>[k,A.bySrc[k]]);
+  $('incTot').textContent = '합계 '+won(A.inNet);
+  $('incStack').innerHTML = srcs.map(([k,v])=>`<i style="width:${v.net/Math.max(1,A.inNet)*100}%;background:${SRC[k].c}"></i>`).join('');
+  $('incBk').innerHTML = srcs.length ? srcs.map(([k,v])=>{
+    const kinds = Object.entries(v.kinds).map(([kk,vv])=>`${KIND[kk].n} ${man(vv)}`).join(' · ');
+    return `<div class="it"><span class="dot" style="background:${SRC[k].c}"></span><div class="nm">${SRC[k].n}<span>${kinds}</span></div><div class="vl">${won(v.net)}<span>${Math.round(v.net/Math.max(1,A.inNet)*100)}%</span></div></div>`;
+  }).join('') : '<div class="empty">수입 기록이 없어요</div>';
+  // expenses
+  $('expTot').textContent = '합계 '+won(A.outAll);
+  const gs = Object.keys(GRP).filter(g=>A.byGrp[g]);
+  $('expStack').innerHTML = gs.map(g=>`<i style="width:${A.byGrp[g]/Math.max(1,A.outAll)*100}%;background:${GRP[g].c}"></i>`).join('');
+  $('expBk').innerHTML = gs.length ? gs.map(g=>`<div class="it"><span class="dot" style="background:${GRP[g].c}"></span><div class="nm">${GRP[g].n}</div><div class="vl">${won(A.byGrp[g])}<span>${Math.round(A.byGrp[g]/Math.max(1,A.outAll)*100)}%</span></div></div>`).join('') : '<div class="empty">지출 기록이 없어요</div>';
+  const cats = Object.entries(A.byCat).sort((a,b)=>b[1]-a[1]);
+  $('catBk').innerHTML = cats.map(([k,v])=>{ const [g,c]=k.split('|'); return `<div class="it"><span class="dot" style="background:${GRP[g].c}"></span><div class="nm">${esc(c)}</div><div class="vl">${won(v)}</div></div>`; }).join('');
+  // tax
+  $('taxFor').textContent = (year+1)+'년 5월 신고';
+  let h = '';
+  if(!hasBiz){
+    h = A.wageGross>0 ? `<div class="lines"><div class="l"><span>급여 세전 추정</span><b>${won(A.wageGross)}</b></div><div class="l"><span>연말정산 결정세액 추정</span><b>${won(T.wageOnly?T.wageOnly.totalTax:0)}</b></div></div><p class="note">급여만 있어 5월 종합소득세 신고 대상이 아니에요. 비교할 신고 방법도 없어요.</p>`
+                       : `<p class="note" style="margin:0">개인 세금 계산 대상 수입이 없어요. 법인 매출은 개인 세금에서 빠져요.</p>`;
+  } else {
+    h = `<table class="cmp"><thead><tr><th>신고 방법</th><th>소득금액</th><th>총 세금</th><th>정산</th></tr></thead><tbody>${
+      T.rows.map(r=>`<tr class="${r===p?'best':''}"><td>${MN[r.method]}</td><td>${man(r.total)}</td><td>${man(r.totalTax)}</td><td style="color:${r.settle<0?'var(--inc)':'var(--exp)'}">${r.settle<0?'환급 ':'+'}${man(Math.abs(r.settle))}</td></tr>`).join('')}</tbody></table>`
+      + (T.simpleOK?'':'<p class="note">작년 3.3% 수입이 3,600만 원 이상이라 단순경비율은 쓸 수 없어요.</p>')
+      + `<details class="more"><summary>계산 과정 보기</summary><div class="lines">${[
+          A.wageGross?['급여 세전 (추정)',won(A.wageGross)]:null,
+          A.wageGross?['근로소득공제','−'+won(p.wageDed)]:null,
+          ['3.3%·개인 간 수입', won(A.bizGross+A.more)],
+          ['필요경비 ('+MN[p.method]+')', '−'+won(A.bizGross+A.more-p.bizInc)],
+          ['종합소득금액', won(p.total)],
+          ['소득공제', '−'+won(p.ded)],
+          ['과세표준', won(p.base)],
+          ['산출세액', won(p.calc)],
+          ['세액공제', '−'+won(p.credit)],
+          p.penalty?['무기장가산세','+'+won(p.penalty)]:null,
+          ['지방소득세 포함 총 세금', won(p.totalTax)],
+          ['3.3% 원천징수로 낸 세금', '−'+won(A.bizWith+Math.floor(A.more*.033))],
+          A.wageGross?['급여에서 낸 세금 (추정)','−'+won(p.wagePaid)]:null
+        ].filter(Boolean).map(([k,v])=>`<div class="l"><span>${k}</span><b>${v}</b></div>`).join('')}<div class="l tot"><span>${p.settle<0?'예상 환급':'예상 추가납부'}</span><span>${won(Math.abs(p.settle))}</span></div></div></details>`;
+  }
+  $('taxBody').innerHTML = h;
+  // deductions
+  const L = [];
+  if(A.wageGross) L.push(['근로소득공제', p.wageDed, '급여 세전 '+man(A.wageGross)+'원 기준']);
+  if(hasBiz) L.push(['필요경비', A.bizGross+A.more-p.bizInc, MN[p.method]+(p.method==='book'?' · 업무 추정분 '+man(A.expBook)+'원':'')]);
+  L.push(['인적공제', 1.5e6*Math.max(1,yd(year).settings.people), (yd(year).settings.people)+'명 × 150만']);
+  if(A.wageGross) L.push(['연금·건강보험 공제', Math.floor(A.wageGross*(year>=2026?.0475:.045))+Math.floor(A.wageGross*.0403), '급여에서 낸 보험료 추정']);
+  const st = yd(year).settings; if(st.pensionSelf||st.otherDed) L.push(['직접 낸 연금·기타 공제', (st.pensionSelf||0)+(st.otherDed||0), '설정에서 입력']);
+  if(p.calc>0) L.push(['세액공제', p.credit, (A.wageGross?'근로소득세액공제 등':'표준세액공제')]);
+  $('dedLines').innerHTML = L.map(([k,v,s])=>`<div class="l"><span>${k}<br><span class="muted">${s}</span></span><b>${won(v)}</b></div>`).join('');
 }
-let filter = 'all';
+
+/* ===== RENDER: LIST ===== */
+let filter='all';
 function renderList(){
-  const d = yearData(year);
-  const es = d.entries.filter(e=> filter==='all' || (filter==='in'&&e.k==='in') || (filter==='biz'&&e.k==='out'&&e.biz) || (e.k==='out'&&e.grp===filter))
-    .sort((a,b)=> (b.date||'').localeCompare(a.date||'') || String(b.id).localeCompare(String(a.id)));
-  if(!es.length){ $('list').innerHTML = '<div class="empty">기록이 없어요. 아래 ‘기록’ 탭에서 추가하세요.</div>'; return; }
-  let html = '', curM = '';
-  const mTot = {};
-  for(const e of es){ const m=(e.date||'').slice(0,7); mTot[m]=mTot[m]||{i:0,o:0}; if(e.k==='in') mTot[m].i+=e.gross; else mTot[m].o+=e.amt; }
+  const d = yd(year), A = analyze(year);
+  $('lyTitle').textContent = year+'년 합계'; $('lyCount').textContent = A.count+'건';
+  const kindLines = Object.entries(A.byKind).map(([k,v])=>`<div class="row-b"><span>${KIND[k].n}</span><span>${man(v)}</span></div>`).join('');
+  $('ySum').innerHTML = `
+    <div class="b"><div class="k"><span class="dot" style="display:inline-block;width:8px;height:8px;border-radius:2px;background:var(--inc)"></span>수입</div><div class="v" style="color:var(--inc)">${won(A.inNet)}</div><div class="s">${kindLines||'-'}</div></div>
+    <div class="b"><div class="k"><span style="display:inline-block;width:8px;height:8px;border-radius:2px;background:var(--exp)"></span>지출</div><div class="v" style="color:var(--exp)">${won(A.outAll)}</div><div class="s">${['fixed','var','tax'].map(g=>`<div class="row-b"><span>${GRP[g].n}</span><span>${man(A.byGrp[g]||0)}</span></div>`).join('')}</div></div>
+    <div class="b full row-b"><div class="k">남은 돈 (수입 − 지출)</div><div class="v" style="margin:0;color:${A.inNet-A.outAll<0?'var(--exp)':'var(--ink)'}">${A.inNet-A.outAll<0?'−':''}${won(Math.abs(A.inNet-A.outAll))}</div></div>`;
+  const es = d.entries.filter(e=> filter==='all' || (filter==='in'?e.k==='in' : e.k==='out'&&e.grp===filter))
+    .sort((a,b)=>(b.date||'').localeCompare(a.date||'') || String(b.id).localeCompare(String(a.id)));
+  if(!es.length){ $('list').innerHTML='<div class="empty">기록이 없어요</div>'; return; }
+  const mt = {}; for(const e of es){ const m=e.date.slice(0,7); mt[m]=mt[m]||{i:0,o:0}; if(e.k==='in') mt[m].i+=e.net; else mt[m].o+=e.amt; }
+  let h='', cur='';
   for(const e of es){
-    const m = (e.date||'').slice(0,7);
-    if(m!==curM){ curM=m; html += `<div class="mhead"><span>${parseInt(m.slice(5),10)}월</span><span>수입 ${man(mTot[m].i)} · 지출 ${man(mTot[m].o)}</span></div>`; }
-    const dd = (e.date||'').slice(8);
+    const m = e.date.slice(0,7);
+    if(m!==cur){ cur=m; h+=`<div class="mh"><b>${parseInt(m.slice(5),10)}월</b><span>${mt[m].i?'수입 '+man(mt[m].i):''}${mt[m].i&&mt[m].o?' · ':''}${mt[m].o?'지출 '+man(mt[m].o):''}</span></div>`; }
+    const dd = parseInt(e.date.slice(8),10)+'일';
     if(e.k==='in'){
-      const sn = SRC[e.src]? SRC[e.src].n : '기타';
-      html += `<div class="row"><span class="ic in">${sn}</span><div class="t"><div class="a">${esc(e.who||sn+' 수입')}</div><div class="b">${dd}일 · ${e.with?('원천 '+won(e.with)):'원천징수 없음'}${taxable(e)?'':'<span class="tag">세금 계산 제외</span>'}</div></div><div class="m">${won(e.gross)}<small>실수령 ${won(e.gross-e.with)}</small></div><button type="button" class="del" data-id="${e.id}" aria-label="삭제">✕</button></div>`;
+      const S = SRC[e.src], K = KIND[e.kind];
+      h+=`<div class="ent"><span class="ic" style="background:color-mix(in srgb, ${S.c} 14%, white);color:${S.c}">${S.n.replace('㈜','').slice(0,2)}</span><div class="t"><div class="a">${esc(e.memo||S.n+' 수입')}</div><div class="b">${dd} · ${K.n}${e.with?' · 원천 '+man(e.with):''}</div></div><div class="m inc">+${won(e.net)}${e.gross&&e.gross!==e.net?`<small>세전 ${won(e.gross)}</small>`:''}</div><button type="button" class="del" data-id="${e.id}" aria-label="삭제">✕</button></div>`;
     } else {
-      const fx = e.grp==='fixed';
-      html += `<div class="row"><span class="ic ${fx?'fx':'vr'}">${fx?'고정':'변동'}</span><div class="t"><div class="a">${esc(e.cat)}${e.memo?' · '+esc(e.memo):''}</div><div class="b">${dd}일${e.biz?'<span class="biz">업무 '+(e.ratio??100)+'%</span>':''}</div></div><div class="m">−${won(e.amt)}</div><button type="button" class="del" data-id="${e.id}" aria-label="삭제">✕</button></div>`;
+      const G = GRP[e.grp];
+      h+=`<div class="ent"><span class="ic" style="background:color-mix(in srgb, ${G.c} 12%, white);color:${G.c}">${esc(e.cat).slice(0,2)}</span><div class="t"><div class="a">${esc(e.cat)}${e.memo?' · '+esc(e.memo):''}</div><div class="b">${dd} · ${G.n}</div></div><div class="m">−${won(e.amt)}</div><button type="button" class="del" data-id="${e.id}" aria-label="삭제">✕</button></div>`;
     }
   }
-  $('list').innerHTML = html;
-}
-function renderGuide(){
-  let h = '';
-  for(const [g,label] of [['fixed','고정비'],['var','변동비']]){
-    h += `<tr class="gh"><td colspan="3">${label}</td></tr>`;
-    for(const [c,lv,t] of CATS[g]){ const L=LV[lv]; h += `<tr><td>${esc(c)}</td><td><span class="lv ${L[1]}">${L[0]} ${L[2].replace('업무 관련분만','일부')}</span></td><td>${esc(t)}</td></tr>`; }
-  }
-  $('guide').innerHTML = h;
+  $('list').innerHTML = h;
 }
 
 /* ===== ADD FORM ===== */
-let kind = 'in', withTouched = false;
-function setKind(k){
-  kind = k;
-  document.querySelectorAll('#addForm .seg button').forEach(b=>b.setAttribute('aria-pressed', b.dataset.k===k));
-  $('inFields').classList.toggle('hidden', k!=='in'); $('outFields').classList.toggle('hidden', k==='in');
-  $('copyFixed').classList.toggle('hidden', k!=='fixed');
-  if(k!=='in'){
-    $('fCat').innerHTML = CATS[k].map(([c])=>`<option value="${esc(c)}">${esc(c)}</option>`).join('');
-    onCat();
-  }
-}
-function onCat(){
-  const [c,lv,t] = catInfo(kind, $('fCat').value), L = LV[lv];
-  $('dedInfo').innerHTML = `<span class="lv ${L[1]}">${L[0]} ${L[2]}</span>${esc(t)}`;
-  const isEtc = kind==='var' && c==='기타';
-  $('memoLbl').textContent = isEtc ? '상세 내용 (필수)' : '메모 (선택)';
-  $('fMemo').placeholder = isEtc ? '예) 경조사비, 수리비, 선물' : '';
-  $('fBiz').checked = false; onBiz();
-}
-function onBiz(){ $('ratioWrap').classList.toggle('hidden', !$('fBiz').checked); }
-function autoWith(){
-  const g = num($('fGross').value), rate = (SRC[$('fSrc').value]||SRC.etc).w;
-  if(!withTouched){ const w = Math.floor(g*rate/10)*10; $('fWith').value = g&&w ? w.toLocaleString('ko-KR') : (rate?'':'0'); }
-  $('netHint').textContent = '실수령액: ' + won(g - num($('fWith').value));
-}
-function defaultDate(){ const n=new Date(), pad=x=>String(x).padStart(2,'0'); return year===n.getFullYear()? `${n.getFullYear()}-${pad(n.getMonth()+1)}-${pad(n.getDate())}` : `${year}-12-31`; }
-const newId = () => Date.now().toString(36)+Math.random().toString(36).slice(2,6);
-
-document.querySelectorAll('#addForm .seg button').forEach(b=>b.addEventListener('click',()=>setKind(b.dataset.k)));
-$('fCat').addEventListener('change', onCat);
-$('fBiz').addEventListener('change', onBiz);
-$('fSrc').addEventListener('change', ()=>{ withTouched=false; autoWith(); $('notaxWrap').classList.toggle('hidden', $('fSrc').value!=='etc'); });
-$('fGross').addEventListener('input', autoWith);
-$('fWith').addEventListener('input', ()=>{ withTouched = $('fWith').value.trim()!==''; autoWith(); });
-['fGross','fWith','fAmt'].forEach(id=>$(id).addEventListener('blur', e=>fmtIn(e.target)));
-
-$('addForm').addEventListener('submit', e=>{
-  e.preventDefault();
-  const date = $('fDate').value;
-  if(!date){ toast('날짜를 입력하세요'); return; }
-  if(date.slice(0,4)!==String(year)){ toast(year+'년 날짜만 이 장부에 기록돼요'); return; }
-  const d = yearData(year);
+let kind='in', src='school', ikind='biz', basis='gross', cat=null;
+function pickHtml(items, sel){ return items.map(([v,l,dot])=>`<button type="button" data-v="${esc(v)}" aria-pressed="${v===sel}">${dot?`<span class="d" style="background:${dot}"></span>`:''}${esc(l)}</button>`).join(''); }
+function renderForm(){
+  document.querySelectorAll('.seg button').forEach(b=>b.setAttribute('aria-pressed', b.dataset.k===kind));
+  $('inF').classList.toggle('hidden', kind!=='in'); $('outF').classList.toggle('hidden', kind==='in');
+  $('copyFixed').classList.toggle('hidden', kind!=='fixed');
   if(kind==='in'){
-    const gross = num($('fGross').value); if(gross<=0){ toast('지급액을 입력하세요'); return; }
-    const src = $('fSrc').value, rate = SRC[src].w;
-    const w = $('fWith').value.trim()==='' ? Math.floor(gross*rate/10)*10 : num($('fWith').value);
-    const ent = {id:newId(),k:'in',date,src,who:$('fWho').value.trim(),gross:Math.round(gross),with:Math.round(w)};
-    if(src==='etc' && $('fNotax').checked) ent.notax = true;
-    d.entries.push(ent); $('fNotax').checked = false;
-    $('fGross').value=''; $('fWith').value=''; $('fWho').value=''; withTouched=false; autoWith();
+    $('pSrc').innerHTML = pickHtml(Object.entries(SRC).map(([k,v])=>[k,v.n,v.c]), src);
+    $('pKind').innerHTML = pickHtml(Object.entries(KIND).map(([k,v])=>[k,v.n]), ikind);
+    const showBasis = ikind==='biz' || ikind==='wage';
+    $('basisT').classList.toggle('hidden', !showBasis);
+    document.querySelectorAll('#basisT button').forEach(b=>b.setAttribute('aria-pressed', b.dataset.b===basis));
+    $('aLbl').textContent = showBasis ? (basis==='gross'?'세전 금액':'통장에 들어온 금액') : '받은 금액';
+    $('memoLab').textContent = '메모 (선택)'; $('aMemo').placeholder = '예) OO대 특강';
+    inCalc();
   } else {
-    const amt = num($('fAmt').value); if(amt<=0){ toast('금액을 입력하세요'); return; }
-    const cat = $('fCat').value, memo = $('fMemo').value.trim();
-    if(kind==='var' && cat==='기타' && !memo){ toast('기타 항목은 상세 내용을 적어주세요'); $('fMemo').focus(); return; }
-    const biz = $('fBiz').checked, ratio = biz ? Math.min(100, Math.max(1, Math.round(num($('fRatio').value)||100))) : 100;
-    d.entries.push({id:newId(),k:'out',date,grp:kind,cat,memo,amt:Math.round(amt),biz,ratio});
-    $('fAmt').value=''; $('fMemo').value=''; $('fBiz').checked=false; $('fRatio').value='100'; onBiz();
+    if(!cat || !CATS[kind].some(c=>c[0]===cat)) cat = CATS[kind][0][0];
+    $('pCat').innerHTML = pickHtml(CATS[kind].map(([c])=>[c,c]), cat);
+    $('aLbl').textContent = '쓴 금액';
+    const etc = kind==='var' && cat==='기타';
+    $('memoLab').textContent = etc ? '상세 내용 (필수)' : '메모 (선택)';
+    $('aMemo').placeholder = etc ? '예) 경조사비, 가전 수리' : '';
+    outCalc();
   }
-  save(); render(); toast('저장했어요');
+}
+function inCalc(){
+  const a = num($('aAmt').value), K = KIND[ikind];
+  let g=0, w=0, n=0, t='';
+  if(ikind==='biz'){ if(basis==='gross'){ g=a; w=Math.floor(g*.033/10)*10; n=g-w; } else { n=a; g=Math.round(n/.967); w=g-n; } t=`<div class="row-b"><span>세전</span><b>${won(g)}</b></div><div class="row-b"><span>원천징수 3.3%</span><b>−${won(w)}</b></div><div class="row-b"><span>실수령</span><b>${won(n)}</b></div>`; }
+  else if(ikind==='wage'){ if(basis==='gross'){ g=a; n=0; t=`<div class="row-b"><span>세전 급여</span><b>${won(g)}</b></div><div class="muted small">실수령액은 세전의 약 ${yd(year).settings.ratio}%로 추정해요</div>`; } else { n=a; t=`<div class="row-b"><span>실수령</span><b>${won(n)}</b></div><div class="muted small">세전 금액은 설정의 실수령 비율로 추정해요</div>`; } }
+  else { n=a; t=`<div class="muted small">${esc(K.d)}</div>`; }
+  if(ikind==='biz' || ikind==='wage') t += `<div class="muted small" style="margin-top:4px">${esc(K.d)}</div>`;
+  $('inCalc').innerHTML = t;
+  return {g,w,n};
+}
+function outCalc(){
+  const a = num($('aAmt').value), r = RATE[kind+'|'+cat]??0;
+  $('outCalc').innerHTML = r>0 ? `<div class="row-b"><span>세금 계산에 반영될 예상 경비</span><b>${won(Math.round(a*r))}</b></div><div class="muted small">${esc(cat)}의 약 ${Math.round(r*100)}%를 업무용으로 추정해 3.3% 소득의 장부 신고 계산에 넣어요</div>`
+    : `<div class="row-b"><span>세금 계산 반영</span><b class="muted">없음</b></div><div class="muted small">${kind==='tax'?'세금·이자는 경비로 보지 않아요':'생활비 성격이라 경비로 보지 않아요'}</div>`;
+}
+document.querySelectorAll('.seg button').forEach(b=>b.addEventListener('click',()=>{ kind=b.dataset.k; renderForm(); }));
+$('pSrc').addEventListener('click',e=>{ const b=e.target.closest('button'); if(!b) return; src=b.dataset.v; ikind=SRC[src].kind; renderForm(); });
+$('pKind').addEventListener('click',e=>{ const b=e.target.closest('button'); if(!b) return; ikind=b.dataset.v; renderForm(); });
+$('basisT').addEventListener('click',e=>{ const b=e.target.closest('button'); if(!b) return; basis=b.dataset.b; renderForm(); });
+$('pCat').addEventListener('click',e=>{ const b=e.target.closest('button'); if(!b) return; cat=b.dataset.v; renderForm(); });
+$('aAmt').addEventListener('input',()=>{ const pos=$('aAmt').value; fmtField($('aAmt')); kind==='in'?inCalc():outCalc(); });
+$('quick').addEventListener('click',e=>{ const b=e.target.closest('button'); if(!b) return; const v=+b.dataset.v; $('aAmt').value = v? (num($('aAmt').value)+v).toLocaleString('ko-KR') : ''; kind==='in'?inCalc():outCalc(); });
+$('dToday').onclick=()=>{ $('aDate').value = ymd(new Date()); };
+$('dYest').onclick=()=>{ const d=new Date(); d.setDate(d.getDate()-1); $('aDate').value = ymd(d); };
+$('aSave').addEventListener('click',()=>{
+  const date=$('aDate').value, a=num($('aAmt').value), memo=$('aMemo').value.trim();
+  if(!date){ toast('날짜를 골라주세요'); return; }
+  if(a<=0){ toast('금액을 입력해주세요'); $('aAmt').focus(); return; }
+  const y = parseInt(date.slice(0,4),10);
+  const d = yd(y);
+  if(kind==='in'){
+    const {g,w,n} = inCalc();
+    const e = {id:newId(),k:'in',date,src,kind:ikind,memo,gross:0,with:0,net:a};
+    if(ikind==='biz'){ e.gross=g; e.with=w; e.net=n; }
+    else if(ikind==='wage'){ if(basis==='gross'){ e.gross=a; e.net=Math.round(a*(yd(y).settings.ratio||88)/100); } else { e.net=a; } }
+    d.entries.push(e);
+  } else {
+    if(kind==='var' && cat==='기타' && !memo){ toast('기타는 상세 내용을 적어주세요'); $('aMemo').focus(); return; }
+    d.entries.push({id:newId(),k:'out',date,grp:kind,cat,memo,amt:Math.round(a)});
+  }
+  save(y); $('aAmt').value=''; $('aMemo').value=''; renderForm();
+  if(y!==year){ year=y; }
+  renderAll(); toast('저장했어요');
 });
-$('copyFixed').addEventListener('click', ()=>{
-  const date = $('fDate').value || defaultDate();
-  const [y,m] = date.split('-').map(Number);
-  const pm = m===1 ? 12 : m-1, py = m===1 ? y-1 : y;
-  const src = (cache[py] || lsGet(py) || {entries:[]}).entries.filter(e=>e.k==='out'&&e.grp==='fixed'&&parseInt(e.date.slice(5,7),10)===pm);
-  if(!src.length){ toast(pm+'월 고정비 기록이 없어요'); return; }
-  if(y!==year){ toast(year+'년 날짜를 골라주세요'); return; }
-  const last = new Date(y, m, 0).getDate();
-  const d = yearData(year);
-  for(const e of src){ const day = Math.min(last, parseInt(e.date.slice(8),10)||1); d.entries.push({...e, id:newId(), date:`${y}-${String(m).padStart(2,'0')}-${String(day).padStart(2,'0')}`}); }
-  save(); render(); toast(pm+'월 고정비 '+src.length+'건을 '+m+'월로 불러왔어요');
+$('copyFixed').addEventListener('click',()=>{
+  const date = $('aDate').value || ymd(new Date()); const [y,m] = date.split('-').map(Number);
+  const pm = m===1?12:m-1, py = m===1?y-1:y; if(!cache[py]){ const p=lsGet(py); if(p) cache[py]=p; }
+  const src0 = cache[py] ? yd(py).entries.filter(e=>e.k==='out'&&e.grp==='fixed'&&parseInt(e.date.slice(5,7),10)===pm) : [];
+  if(!src0.length){ toast(pm+'월 고정비 기록이 없어요'); return; }
+  const last = new Date(y,m,0).getDate(), d = yd(y);
+  for(const e of src0){ const day=Math.min(last, parseInt(e.date.slice(8),10)||1); d.entries.push({...e,id:newId(),date:`${y}-${pad2(m)}-${pad2(day)}`}); }
+  save(y); renderAll(); toast(`${pm}월 고정비 ${src0.length}건을 ${m}월로 불러왔어요`);
 });
-$('list').addEventListener('click', e=>{
-  const b = e.target.closest('button.del'); if(!b) return;
-  const d = yearData(year), i = d.entries.findIndex(x=>x.id===b.dataset.id); if(i<0) return;
-  d.entries.splice(i,1); save(); render(); toast('삭제했어요');
-});
-document.querySelectorAll('.chip').forEach(c=>c.addEventListener('click',()=>{ filter=c.dataset.f; document.querySelectorAll('.chip').forEach(x=>x.setAttribute('aria-pressed', x===c)); renderList(); }));
+$('list').addEventListener('click',e=>{ const b=e.target.closest('.del'); if(!b) return; const d=yd(year), i=d.entries.findIndex(x=>x.id===b.dataset.id); if(i<0) return; d.entries.splice(i,1); save(); renderAll(); toast('삭제했어요'); });
+$('chips').addEventListener('click',e=>{ const b=e.target.closest('.chip'); if(!b) return; filter=b.dataset.f; document.querySelectorAll('.chip').forEach(x=>x.setAttribute('aria-pressed',x===b)); renderList(); });
 
 /* ===== SETTINGS ===== */
-function fillSettings(){
-  const st = yearData(year).settings;
-  $('sInd').value = st.ind||'940903'; $('sRs').value = st.rs ?? ''; $('sRb').value = st.rb ?? '';
-  $('indHint').textContent = (IND[st.ind]||IND.custom).note;
-  const m = (id,v)=>{ $(id).value = v? Math.round(v).toLocaleString('ko-KR') : ''; };
-  m('sPrev',st.prev); $('sNew').checked = !!st.isNew; $('sPeople').value = st.people||1;
-  m('sExtra',st.extra); m('sPension',st.pension); m('sOtherDed',st.otherDed); m('sCredit',st.credit);
-  m('sOtherInc',st.otherInc); m('sOtherPaid',st.otherPaid); m('sMore',st.more); m('sWageGross',st.wageGross);
+function fillSet(){
+  const st = yd(year).settings, A = analyze(year);
+  $('pV').textContent = st.people||1;
+  const f=(id,v)=>{ $(id).value = v? Math.round(v).toLocaleString('ko-KR') : ''; };
+  f('sPen',st.pensionSelf); f('sOD',st.otherDed); f('sCr',st.credit); f('sMore',st.more);
+  $('sRatio').value = st.ratio||88; $('aPrev').textContent = won(A.prev); $('aWage').textContent = won(A.wageGross);
+  $('sInd').value = st.ind; $('sRs').value = st.rs; $('sRb').value = st.rb; $('indNote').textContent = (IND[st.ind]||IND.custom).n;
+  const pf=lsGet('profile')||{}; $('sBirth').value=pf.birth||''; $('sTime').value=pf.time||'';
   updateLockUi();
 }
-document.querySelectorAll('#setForm input[inputmode="numeric"]').forEach(el=>{ if(el.id!=='sPeople') el.addEventListener('blur', ()=>fmtIn(el)); });
-$('sInd').addEventListener('change', ()=>{ const p=IND[$('sInd').value]; if(p.rs!=null){ $('sRs').value=p.rs; $('sRb').value=p.rb; } $('indHint').textContent=p.note; });
-$('setForm').addEventListener('submit', e=>{
-  e.preventDefault();
-  const st = yearData(year).settings;
-  st.ind=$('sInd').value; st.rs=num($('sRs').value); st.rb=num($('sRb').value); st.prev=num($('sPrev').value); st.isNew=$('sNew').checked;
-  st.people=Math.max(1, Math.round(num($('sPeople').value)||1)); st.extra=num($('sExtra').value); st.pension=num($('sPension').value);
-  st.otherDed=num($('sOtherDed').value); st.credit=num($('sCredit').value); st.otherInc=num($('sOtherInc').value); st.otherPaid=num($('sOtherPaid').value); st.more=num($('sMore').value); st.wageGross=num($('sWageGross').value);
-  save(); render(); toast('설정을 저장했어요'); showTab('home');
-});
-
-/* ===== TABS / YEAR ===== */
-function showTab(t){
-  document.querySelectorAll('nav.tabs button').forEach(b=>b.setAttribute('aria-selected', b.dataset.tab===t));
-  for(const id of ['home','list','add','set']) $('tab-'+id).classList.toggle('hidden', id!==t);
-  if(t==='set') fillSettings();
-  if(t==='add' && !$('fDate').value.startsWith(String(year))) $('fDate').value = defaultDate();
-  window.scrollTo(0,0);
-}
-document.querySelectorAll('nav.tabs button').forEach(b=>b.addEventListener('click',()=>showTab(b.dataset.tab)));
-$('yPrev').onclick = async ()=>{ year--; await load(year); render(); fillSettings(); if($('fDate').value) $('fDate').value=defaultDate(); };
-$('yNext').onclick = async ()=>{ year++; await load(year); render(); fillSettings(); if($('fDate').value) $('fDate').value=defaultDate(); };
+['sPen','sOD','sCr','sMore'].forEach(id=>$(id).addEventListener('blur',()=>fmtField($(id))));
+$('pM').onclick=()=>{ const v=Math.max(1,+$('pV').textContent-1); $('pV').textContent=v; };
+$('pP').onclick=()=>{ const v=Math.min(10,+$('pV').textContent+1); $('pV').textContent=v; };
+$('sInd').onchange=()=>{ const p=IND[$('sInd').value]; if(p.rs!=null){ $('sRs').value=p.rs; $('sRb').value=p.rb; } $('indNote').textContent=p.n; };
+$('sSave').onclick=()=>{
+  const st = yd(year).settings;
+  st.people=+$('pV').textContent; st.pensionSelf=num($('sPen').value); st.otherDed=num($('sOD').value); st.credit=num($('sCr').value); st.more=num($('sMore').value);
+  st.ratio=Math.min(99,Math.max(50,num($('sRatio').value)||88)); st.ind=$('sInd').value; st.rs=num($('sRs').value); st.rb=num($('sRb').value);
+  const pf={birth:$('sBirth').value||'', time:$('sTime').value||''}; if(pf.birth) lsSet('profile',pf);
+  save(); renderAll(); fillSet(); renderToday(); toast('설정을 저장했어요');
+};
 
 /* ===== BACKUP ===== */
-async function download(name, text){
-  if(dl){ try{ await dl.save({filename:name, data:text}); }catch(e){ toast('저장이 취소됐어요'); } return; }
-  try{ const a=document.createElement('a'); a.href=URL.createObjectURL(new Blob([text],{type:'application/octet-stream'})); a.download=name; document.body.appendChild(a); a.click(); setTimeout(()=>{URL.revokeObjectURL(a.href); a.remove();},800); }
-  catch(e){ toast('이 화면에서는 파일 저장을 쓸 수 없어요'); }
+async function download(name,text){
+  if(dl){ try{ await dl.save({filename:name,data:text}); }catch(e){ toast('저장이 취소됐어요'); } return; }
+  try{ const a=document.createElement('a'); a.href=URL.createObjectURL(new Blob([text],{type:'application/octet-stream'})); a.download=name; document.body.appendChild(a); a.click(); setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove();},800); }catch(e){ toast('이 화면에서는 저장할 수 없어요'); }
 }
-$('bExport').onclick = ()=>{
-  const d = yearData(year), q = v => '"'+String(v??'').replace(/"/g,'""')+'"';
-  const rows = [['날짜','구분','수입처/항목','내용','금액','원천징수','실수령','업무경비 비율']];
-  for(const e of [...d.entries].sort((a,b)=>(a.date||'').localeCompare(b.date||''))){
-    if(e.k==='in') rows.push([e.date,'수입',(SRC[e.src]||SRC.etc).n+(taxable(e)?'':' (세금 계산 제외)'),e.who,e.gross,e.with,e.gross-e.with,'']);
-    else rows.push([e.date,e.grp==='fixed'?'고정비':'변동비',e.cat,e.memo,e.amt,'','',e.biz?(e.ratio??100)+'%':'']);
+$('bJson').onclick=()=>{ const all={}; for(let y=2015;y<=thisYear+1;y++){ const d=cache[y]||lsGet(y); if(d&&d.entries&&d.entries.length) all[y]=d; } download(`장부_백업_${ymd(new Date())}.json`, JSON.stringify({app:'ledger33',v:3,years:all})); };
+$('bCsv').onclick=()=>{
+  const q=v=>'"'+String(v??'').replace(/"/g,'""')+'"', rows=[['날짜','구분','수입처/항목','종류','내용','세전','원천징수','금액(실수령/지출)']];
+  for(const e of [...yd(year).entries].sort((a,b)=>a.date.localeCompare(b.date))){
+    if(e.k==='in') rows.push([e.date,'수입',SRC[e.src].n,KIND[e.kind].n,e.memo,e.gross||'',e.with||'',e.net]);
+    else rows.push([e.date,GRP[e.grp].n,e.cat,'',e.memo,'','',e.amt]);
   }
   download(`장부_${year}.csv`, '﻿'+rows.map(r=>r.map(q).join(',')).join('\r\n'));
 };
-$('bJson').onclick = ()=>{
-  const all = {};
-  for(let y=2015; y<=thisYear+1; y++){ const d = cache[y] || lsGet(y); if(d && d.entries && d.entries.length) all[y]=d; }
-  download(`장부_백업_${new Date().toISOString().slice(0,10)}.json`, JSON.stringify({app:'ledger33',v:2,years:all}));
-};
-$('bImport').addEventListener('change', async e=>{
-  const f = e.target.files[0]; if(!f) return;
-  try{
-    const j = JSON.parse(await f.text());
-    if(!j || j.app!=='ledger33' || !j.years) throw new Error('bad');
-    let n = 0;
-    for(const [y,d] of Object.entries(j.years)){ cache[y] = {entries:d.entries||[], settings:{...DEF_SET, ...(d.settings||{})}}; save(parseInt(y,10)); n += (d.entries||[]).length; }
-    await load(year); render(); toast('백업 '+n+'건을 불러왔어요');
+$('bImport').addEventListener('change',async e=>{
+  const f=e.target.files[0]; if(!f) return;
+  try{ const j=JSON.parse(await f.text()); if(!j||j.app!=='ledger33'||!j.years) throw 0; let n=0;
+    for(const [y,d] of Object.entries(j.years)){ cache[y]={entries:d.entries||[],settings:{...DEF,...(d.settings||{})}}; yd(y); save(+y); n+=(d.entries||[]).length; }
+    await load(year); renderAll(); toast(`${n}건을 불러왔어요`);
   }catch(err){ toast('백업 파일을 읽을 수 없어요'); }
   e.target.value='';
 });
 
-/* ===== LOCK ===== */
-const LOCK = (function(){
-  const KEY = 'lock', FAIL = 'lockfail';
-  let cfg = lsGet(KEY), mode = null, buf = '', first = null, onDone = null, hiddenAt = 0, unlocked = false;
-  const enc = new TextEncoder();
-  const hex = b => Array.from(new Uint8Array(b)).map(x=>x.toString(16).padStart(2,'0')).join('');
-  async function hash(secret, salt){
-    try{
-      const k = await crypto.subtle.importKey('raw', enc.encode(secret), 'PBKDF2', false, ['deriveBits']);
-      return hex(await crypto.subtle.deriveBits({name:'PBKDF2', salt:enc.encode(salt), iterations:150000, hash:'SHA-256'}, k, 256));
-    }catch(e){ let h=5381; const s=salt+secret; for(let r=0;r<2000;r++) for(let i=0;i<s.length;i++) h=((h<<5)+h+s.charCodeAt(i))|0; return 'w'+(h>>>0).toString(16); }
+/* ===== FORTUNE ===== */
+const TAROT = [
+ ['0','바보','THE FOOL','새로운 시작의 기운이 가득해요. 계획보다 첫걸음이 중요한 날이에요.','M37 14 l6 14 h14 l-11 9 4 15 -13-9 -13 9 4-15 -11-9 h14z'],
+ ['I','마법사','THE MAGICIAN','가진 재능을 꺼내 쓸 때예요. 미뤄둔 일을 시작하면 술술 풀려요.','M18 37 a10 7 0 1 0 19 0 a10 7 0 1 0 19 0 a10 7 0 1 0 -19 0 a10 7 0 1 0 -19 0z'],
+ ['II','여사제','THE HIGH PRIESTESS','직감이 맞는 날이에요. 큰 결정은 한 번 더 조용히 생각해 보세요.','M37 12 a25 25 0 1 0 0.1 0 M37 20 a17 17 0 1 1 -0.1 0'],
+ ['III','여황제','THE EMPRESS','풍요의 카드예요. 들어오는 돈과 사람이 넉넉해지는 흐름이에요.','M37 16 c-12 0 -18 10 -18 20 c0 14 18 22 18 22 s18-8 18-22 c0-10 -6-20 -18-20z'],
+ ['IV','황제','THE EMPEROR','원칙을 세우면 안정이 와요. 장부 정리하기 딱 좋은 날이에요.','M17 54 h40 v-22 l-20-16 -20 16z'],
+ ['V','교황','THE HIEROPHANT','믿을 만한 조언을 듣게 돼요. 선배·전문가의 말에 힌트가 있어요.','M37 12 v50 M22 26 h30 M26 40 h22'],
+ ['VI','연인','THE LOVERS','좋은 선택과 좋은 인연의 날이에요. 마음이 끌리는 쪽을 믿어보세요.','M37 56 C14 40 14 22 26 18 c6-2 11 2 11 8 c0-6 5-10 11-8 c12 4 12 22 -11 38z'],
+ ['VII','전차','THE CHARIOT','밀어붙이면 이기는 날이에요. 미뤘던 연락·계약을 진행해 보세요.','M14 46 h46 l-6-16 h-34z M24 54 a5 5 0 1 0 .1 0 M50 54 a5 5 0 1 0 .1 0'],
+ ['VIII','힘','STRENGTH','부드러움이 힘이에요. 서두르지 않아도 결국 원하는 걸 얻어요.','M20 40 a17 17 0 1 0 34 0 a17 17 0 1 0 -34 0 M37 23 v-9'],
+ ['IX','은둔자','THE HERMIT','혼자만의 정리 시간이 행운을 불러요. 지출을 돌아보기 좋아요.','M37 14 l12 20 h-24z M37 34 v26'],
+ ['X','운명의 수레바퀴','WHEEL OF FORTUNE','흐름이 바뀌는 날이에요. 작은 기회가 큰 행운으로 이어질 수 있어요.','M37 14 a23 23 0 1 0 .1 0 M37 14 v46 M14 37 h46 M21 21 l32 32 M53 21 l-32 32'],
+ ['XI','정의','JUSTICE','공정한 결과가 돌아와요. 계산과 서류를 꼼꼼히 하면 손해가 없어요.','M37 14 v44 M18 26 h38 M18 26 l-6 14 h12z M56 26 l-6 14 h12z'],
+ ['XII','매달린 사람','THE HANGED MAN','잠시 멈춰서 보면 답이 보여요. 오늘은 큰 지출을 하루 미뤄요.','M20 16 h34 M37 16 v20 M37 36 a8 8 0 1 0 .1 0'],
+ ['XIII','변화','TRANSFORMATION','묵은 것을 정리하면 새 기운이 들어와요. 안 쓰는 구독을 끊어보세요.','M16 50 q21-40 42 0 M24 50 q13-24 26 0'],
+ ['XIV','절제','TEMPERANCE','균형이 행운이에요. 들어오는 돈과 나가는 돈의 리듬을 맞춰보세요.','M24 20 h10 v14 h-10z M40 40 h10 v14 h-10z M34 27 q10 0 11 13'],
+ ['XV','유혹','TEMPTATION','충동구매를 조심하는 날이에요. 장바구니는 내일 다시 열어보세요.','M24 22 l6 10 M50 22 l-6 10 M22 40 a15 13 0 1 0 30 0 a15 13 0 1 0 -30 0'],
+ ['XVI','탑','THE TOWER','예상 밖의 일이 생겨도 금방 정리돼요. 미리 백업해 두면 든든해요.','M27 58 v-36 l10-8 10 8 v36z M33 30 h8'],
+ ['XVII','별','THE STAR','희망과 회복의 날이에요. 꾸준히 해온 일에 좋은 소식이 와요.','M37 12 l5 17 h17 l-14 10 6 17 -14-10 -14 10 6-17 -14-10 h17z'],
+ ['XVIII','달','THE MOON','안개 낀 날이에요. 확인 안 된 정보로 돈을 움직이지 마세요.','M44 14 a22 22 0 1 0 0 46 a17 17 0 1 1 0 -46z'],
+ ['XIX','태양','THE SUN','밝고 활짝 핀 하루예요. 수입·일·관계 모두 좋은 기운이에요.','M37 26 a11 11 0 1 0 .1 0 M37 10 v8 M37 56 v8 M10 37 h8 M56 37 h8 M18 18 l6 6 M50 50 l6 6 M56 18 l-6 6 M24 50 l-6 6'],
+ ['XX','심판','JUDGEMENT','지난 노력이 평가받는 날이에요. 미뤄둔 정산을 끝내기 좋아요.','M20 30 h34 l-6 22 h-22z M37 14 v10'],
+ ['XXI','세계','THE WORLD','하나의 큰 마무리와 성취의 카드예요. 오늘 끝낸 일이 크게 남아요.','M37 12 c16 0 22 12 22 25 s-6 25 -22 25 s-22 -12 -22 -25 s6 -25 22 -25z M37 22 c9 0 12 7 12 15 s-3 15 -12 15 s-12 -7 -12 -15 s3 -15 12 -15z']
+];
+const COLORS = [['골드','#D4A33A'],['에메랄드','#2E9E78'],['코랄','#F07A5E'],['라벤더','#A68BD6'],['스카이블루','#5AA9E6'],['버건디','#8E2C48'],['아이보리','#F3EBD8'],['올리브','#8A9A3B'],['로즈핑크','#E98BA8'],['차콜','#3C3F48'],['민트','#7FD8C3'],['테라코타','#C8633F'],['딥그린','#1F5E46'],['선셋오렌지','#F49A3A']];
+const ITEMS = ['손목시계','작은 노트','따뜻한 차','은반지','향초','파란 펜','손수건','동전 지갑','책갈피','머그컵','텀블러','화분','에코백','가죽 수첩','실크 스카프','헤어핀'];
+const DIRS = ['동쪽','서쪽','남쪽','북쪽','동남쪽','동북쪽','남서쪽','북서쪽'];
+const QUOTES = ['작은 기록이 큰 여유를 만들어요.','오늘 아낀 만 원이 내년의 환급이 될지도 몰라요.','숫자는 거짓말을 하지 않아요. 오늘도 한 줄 적어봐요.','천천히 가도 멈추지 않으면 도착해요.','지갑을 정리하면 마음도 정리돼요.','좋은 소식은 준비된 사람에게 먼저 와요.','오늘의 성실함이 내일의 행운이에요.','나를 위한 지출과 낭비는 달라요. 오늘은 나를 위해 써도 괜찮아요.','기회는 계획 위에 내려앉아요.','웃는 날이 많을수록 돈도 따라와요.'];
+const GOOD = ['막혔던 일이 풀리고 반가운 연락이 올 수 있어요.','사람 사이에서 좋은 기회가 생겨요. 먼저 인사해 보세요.','작은 지출을 줄이면 큰 여유로 돌아와요.','오후로 갈수록 운이 올라가요. 중요한 일은 오후에 해보세요.','뜻밖의 수입이나 선물이 있을 수 있어요.','머릿속 계획을 글로 적으면 현실이 되기 쉬운 날이에요.'];
+function rng(seed){ let a=seed>>>0; return ()=>{ a|=0; a=a+0x6D2B79F5|0; let t=Math.imul(a^a>>>15,1|a); t=t+Math.imul(t^t>>>7,61|t)^t; return ((t^t>>>14)>>>0)/4294967296; }; }
+function hashStr(s){ let h=2166136261; for(const ch of s){ h^=ch.charCodeAt(0); h=Math.imul(h,16777619); } return h>>>0; }
+function renderToday(){
+  const now = new Date(), key = ymd(now), Y=now.getFullYear(), M=now.getMonth()+1, D=now.getDate();
+  const pf = lsGet('profile')||{};
+  const r = rng(hashStr('ledger-'+key+'-'+(pf.birth||'')));
+  const pick = arr => arr[Math.floor(r()*arr.length)];
+  $('fDate').textContent = `${Y}년 ${M}월 ${D}일 ${'일월화수목금토'[now.getDay()]}요일`;
+  // tarot (bonus)
+  const t = pick(TAROT);
+  $('tNo').textContent=t[0]; $('tNm').textContent=t[1]; $('tEn').textContent=t[2];
+  $('tSym').innerHTML=`<path d="${t[4]}" fill="none" stroke="#B8862B" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>`;
+  $('tMsg').innerHTML=`<b>${t[1]}</b> · ${t[3]}`;
+  const stars = S => S.map(([k,v])=>`<div><span>${k}</span><b>${'★'.repeat(v)}${'☆'.repeat(5-v)}</b></div>`).join('');
+  if(pf.birth){
+    $('profAsk').classList.add('hidden'); $('myChart').classList.remove('hidden');
+    const [by,bm,bd] = pf.birth.split('-').map(Number); const [th,tm] = (pf.time||'').split(':');
+    const c = SAJU.chart(by,bm,bd, pf.time? +th : null, pf.time? +tm : null);
+    const T = SAJU.today(c, Y, M, D, r);
+    const meName = SAJU.GK[c.P.day.s]+SAJU.EL[c.me];
+    $('fHead').textContent = `나에게 ${T.god}의 날`;
+    $('fIlj').innerHTML = `<span>오늘 일진 <b>${T.day.k}(${T.day.h})</b></span><span>내 일간 <b>${meName}</b></span>${T.rel?`<span>일지와 <b>${T.rel}</b></span>`:''}`;
+    $('fMsg').textContent = T.text;
+    $('fStars').innerHTML = stars(T.stars);
+    $('fRel').classList.toggle('hidden', !T.relText); $('fRel').textContent = T.relText;
+    $('lNum').innerHTML = T.nums.map(n=>`<span class="ball" style="background:${['#3E9B5B','#D6453D','#C9962E','#9AA1AC','#2E3D6B'][T.luckyEl]}">${n}</span>`).join('');
+    $('lCol').innerHTML = `<span class="sw" style="background:${T.color[1]}"></span>${T.color[0]}`;
+    $('lDir').textContent = T.dir; $('lItem').textContent = T.item;
+    $('lMoney').innerHTML = `<b>${T.god}</b>의 날 · ${T.money}<br><span class="muted">행운의 기운은 <b>${SAJU.EL[T.luckyEl]}(${SAJU.EH[T.luckyEl]})</b>예요. 내 사주에 부족한 기운이라 채워주면 좋아요.</span>`;
+    // chart card
+    const P=[['시',c.P.hour],['일',c.P.day],['월',c.P.month],['년',c.P.year]];
+    const cell=(ch,el,kr)=>`<div class="c el-${el}">${ch}<small>${kr}·${SAJU.EL[el]}</small></div>`;
+    $('chartBody').innerHTML = `<div class="pil">${P.map(([h,p])=>`<div><div class="h">${h}주</div>${p?cell(SAJU.GH[p.s],SAJU.stemEl(p.s),SAJU.GK[p.s])+'<div style="height:6px"></div>'+cell(SAJU.JH[p.b],SAJU.branchEl[p.b],SAJU.JK[p.b]):'<div class="c" style="background:var(--soft);color:var(--mute);font-size:13px;padding:30px 0">시간<br>모름</div>'}</div>`).join('')}</div>
+      <div class="ebar">${SAJU.EL.map((e,i)=>`<div class="el-${i}"><b>${c.count[i]}</b>${e}(${SAJU.EH[i]})</div>`).join('')}</div>
+      <p class="small" style="line-height:1.7;margin:14px 0 0">일간 <b>${meName}</b> · ${SAJU.DESC[c.me]}이에요. ${c.missing.length?`<b>${c.missing.map(i=>SAJU.EL[i]).join('·')}</b> 기운이 비어 있어서 이 기운을 채우는 색·방향·숫자를 행운으로 골라요.`:`<b>${SAJU.EL[c.lucky[0]]}</b> 기운이 가장 적어 이 기운을 행운으로 골라요.`}${pf.time? '' : ' 태어난 시간을 넣으면 시주까지 반영돼요.'}</p>
+      <p class="note">절기(입춘 등) 경계는 근사값이라 절입일 전후 하루 출생은 월주가 다를 수 있어요. 05:30 같은 시간 경계는 한국 표준시 보정(30분)을 적용했어요.</p>`;
+  } else {
+    $('profAsk').classList.remove('hidden'); $('myChart').classList.add('hidden');
+    $('fHead').textContent = '오늘의 운세'; $('fIlj').innerHTML = '<span>생년월일을 넣으면 사주로 풀이해요</span>';
+    $('fMsg').textContent = pick(GOOD); $('fStars').innerHTML = stars([['총운',2+Math.floor(r()*4)],['재물운',2+Math.floor(r()*4)],['일·학업운',2+Math.floor(r()*4)],['대인운',2+Math.floor(r()*4)]]);
+    $('fRel').classList.add('hidden');
+    const nums=new Set(); while(nums.size<3) nums.add(1+Math.floor(r()*45));
+    $('lNum').innerHTML=[...nums].sort((a,b)=>a-b).map(n=>`<span class="ball" style="background:#B8862B">${n}</span>`).join('');
+    const c=pick(COLORS); $('lCol').innerHTML=`<span class="sw" style="background:${c[1]}"></span>${c[0]}`;
+    $('lDir').textContent=pick(DIRS); $('lItem').textContent=pick(ITEMS); $('lMoney').textContent=pick(QUOTES);
   }
-  const el = $('lock'), msg = (t,err)=>{ $('lkMsg').textContent=t; $('lkMsg').classList.toggle('err', !!err); };
-  function show(on){ el.classList.toggle('hidden', !on); $('app').classList.toggle('locked', on); }
-  function actions(list){ $('lkActions').innerHTML=''; for(const [t,fn,cls] of list){ const b=document.createElement('button'); b.type='button'; b.className=cls||'lk-link'; b.textContent=t; b.onclick=fn; $('lkActions').appendChild(b); } }
-  // PIN pad
-  function pinView(len, title, cb){
-    $('lkTitle').textContent = title; $('lkPinView').classList.remove('hidden'); $('lkPatView').classList.add('hidden');
-    buf=''; const maxLen = len||6;
-    const dots = ()=>{ $('lkDots').innerHTML = Array.from({length: len||Math.max(4,buf.length)}, (_,i)=>`<i class="${i<buf.length?'on':''}"></i>`).join(''); };
-    const keys = ['1','2','3','4','5','6','7','8','9', len? '' : 'ok', '0', 'del'];
-    $('lkPad').innerHTML = keys.map(k=> k==='' ? '<span></span>' : `<button type="button" data-k="${k}" class="${k.length>1?'fn':''}" aria-label="${k==='del'?'지우기':k==='ok'?'확인':k}">${k==='del'?'지움':k==='ok'?'확인':k}</button>`).join('');
-    $('lkPad').onclick = e=>{
-      const b = e.target.closest('button'); if(!b) return; const k = b.dataset.k;
-      if(k==='del') buf = buf.slice(0,-1);
-      else if(k==='ok'){ if(buf.length<4){ msg('4~6자리로 입력하세요', true); return; } cb(buf); return; }
-      else if(buf.length < maxLen) buf += k;
-      dots();
-      if(len && buf.length===len) setTimeout(()=>cb(buf), 80);
-    };
+  // ledger line
+  const Dd = cache[Y] ? yd(Y) : null;
+  let msg = '이번 달 기록이 아직 없어요. 오늘 첫 줄을 적어볼까요?';
+  if(Dd){
+    const sum=(mm,yy)=>{ const DD = yy===Y?Dd:(cache[yy]?yd(yy):null); if(!DD) return null; return DD.entries.filter(e=>e.k==='out'&&parseInt(e.date.slice(5,7),10)===mm&&parseInt(e.date.slice(8),10)<=D).reduce((a,e)=>a+e.amt,0); };
+    const cur=sum(M,Y), pm=M===1?12:M-1, prev=sum(pm, M===1?Y-1:Y);
+    const inc=Dd.entries.filter(e=>e.k==='in'&&parseInt(e.date.slice(5,7),10)===M).reduce((a,e)=>a+e.net,0);
+    if(cur||inc) msg=`이번 달 쓴 돈은 <b>${won(cur||0)}</b>`+(prev?(cur<=prev?`로 지난달 같은 날보다 <b style="color:var(--inc)">${won(prev-cur)} 적어요</b>.`:`로 지난달 같은 날보다 <b style="color:var(--exp)">${won(cur-prev)} 많아요</b>.`):'예요.')+(inc?` 들어온 돈은 <b>${won(inc)}</b>이에요.`:'');
+  }
+  $('lLedger').innerHTML = msg;
+  let flipped=false; try{ flipped=!!sessionStorage.getItem('flip-'+key); }catch(e){}
+  if(flipped) flipCard(true);
+}
+function flipCard(instant){
+  const t=$('tarot'); if(t.classList.contains('flip')) return;
+  if(instant) t.querySelector('.in').style.transition='none';
+  t.classList.add('flip'); $('tapHint').classList.add('hidden'); $('tMsg').classList.remove('hidden');
+  try{ sessionStorage.setItem('flip-'+ymd(new Date()),'1'); }catch(e){}
+}
+$('tarot').onclick=()=>flipCard(false);
+$('goHome').onclick=()=>showTab('home');
+$('pfSave').onclick=()=>{ const b=$('pfBirth').value; if(!b){ toast('생년월일을 넣어주세요'); return; } lsSet('profile',{birth:b,time:$('pfTime').value||''}); renderToday(); toast('사주를 계산했어요'); };
+
+/* ===== TABS ===== */
+const TITLES = {today:'오늘', home:'요약', add:'기록하기', list:'내역', set:'설정'};
+let tab='today';
+function showTab(t){
+  tab=t;
+  document.querySelectorAll('nav.tabs button').forEach(b=>b.setAttribute('aria-selected', b.dataset.tab===t));
+  for(const id of Object.keys(TITLES)) $('tab-'+id).classList.toggle('hidden', id!==t);
+  $('ttl').textContent = TITLES[t]; $('yrBox').classList.toggle('hidden', t==='today'||t==='add');
+  if(t==='set') fillSet();
+  if(t==='add'){ if(!$('aDate').value) $('aDate').value = year===thisYear? ymd(new Date()) : `${year}-12-31`; renderForm(); }
+  window.scrollTo(0,0);
+}
+document.querySelectorAll('nav.tabs button').forEach(b=>b.addEventListener('click',()=>showTab(b.dataset.tab)));
+function renderAll(){ $('yLbl').textContent=year; renderHome(); renderList(); }
+$('yPrev').onclick=async()=>{ year--; await load(year); renderAll(); if(tab==='set') fillSet(); };
+$('yNext').onclick=async()=>{ year++; await load(year); renderAll(); if(tab==='set') fillSet(); };
+
+/* ===== LOCK ===== */
+const LOCK=(function(){
+  const KEY='lock', FAIL='lockfail'; let cfg=lsGet(KEY), buf='', hiddenAt=0;
+  const enc=new TextEncoder(), hex=b=>Array.from(new Uint8Array(b)).map(x=>x.toString(16).padStart(2,'0')).join('');
+  async function hash(s,salt){ try{ const k=await crypto.subtle.importKey('raw',enc.encode(s),'PBKDF2',false,['deriveBits']); return hex(await crypto.subtle.deriveBits({name:'PBKDF2',salt:enc.encode(salt),iterations:150000,hash:'SHA-256'},k,256)); }catch(e){ let h=5381; const t=salt+s; for(let r=0;r<2000;r++) for(let i=0;i<t.length;i++) h=((h<<5)+h+t.charCodeAt(i))|0; return 'w'+(h>>>0).toString(16); } }
+  const msg=(t,err)=>{ $('lkMsg').textContent=t; $('lkMsg').classList.toggle('err',!!err); };
+  const show=on=>{ $('lock').classList.toggle('hidden',!on); $('app').classList.toggle('locked',on); };
+  function actions(list){ const box=$('lkActions'); box.innerHTML=''; for(const [t,fn,cls] of list){ const b=document.createElement('button'); b.type='button'; b.className=cls||'lk-link'; b.textContent=t; b.onclick=fn; box.appendChild(b); } }
+  function pinView(len,title,cb){
+    $('lkTitle').textContent=title; $('lkPinView').classList.remove('hidden'); $('lkPatView').classList.add('hidden'); buf='';
+    const dots=()=>{ $('lkDots').innerHTML=Array.from({length:len||Math.max(4,buf.length)},(_,i)=>`<i class="${i<buf.length?'on':''}"></i>`).join(''); };
+    const keys=['1','2','3','4','5','6','7','8','9',len?'':'ok','0','del'];
+    $('lkPad').innerHTML=keys.map(k=>k===''?'<span></span>':`<button type="button" data-k="${k}" class="${k.length>1?'fn':''}" aria-label="${k==='del'?'지우기':k==='ok'?'확인':k}">${k==='del'?'지움':k==='ok'?'확인':k}</button>`).join('');
+    $('lkPad').onclick=e=>{ const b=e.target.closest('button'); if(!b) return; const k=b.dataset.k;
+      if(k==='del') buf=buf.slice(0,-1); else if(k==='ok'){ if(buf.length<4){ msg('4~6자리로 입력하세요',true); return; } cb(buf); return; } else if(buf.length<(len||6)) buf+=k;
+      dots(); if(len&&buf.length===len) setTimeout(()=>cb(buf),80); };
     dots();
   }
-  // Pattern
-  function patView(title, cb){
-    $('lkTitle').textContent = title; $('lkPatView').classList.remove('hidden'); $('lkPinView').classList.add('hidden');
-    const svg = $('lkPatSvg'), P = [], R = 26, pts = [];
-    for(let r=0;r<3;r++) for(let c=0;c<3;c++) P.push([45+c*90, 45+r*90]);
-    const draw = (cur)=>{
-      let h = P.map(([x,y],i)=>`<circle cx="${x}" cy="${y}" r="${pts.includes(i)?14:9}" fill="${pts.includes(i)?'#fff':'rgba(255,255,255,.55)'}"/>`).join('');
-      if(pts.length){ const path = pts.map(i=>P[i].join(',')).join(' ') + (cur? ' '+cur.join(','):''); h = `<polyline points="${path}" fill="none" stroke="rgba(255,255,255,.85)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>` + h; }
-      svg.innerHTML = h;
-    };
-    const loc = ev=>{ const b = svg.getBoundingClientRect(); return [(ev.clientX-b.left)*270/b.width, (ev.clientY-b.top)*270/b.height]; };
-    const hit = ([x,y])=>{ for(let i=0;i<9;i++){ const [px,py]=P[i]; if((px-x)**2+(py-y)**2 < R*R*1.6 && !pts.includes(i)){
-      if(pts.length){ const a=pts[pts.length-1], mid=(a+i)/2; if(Number.isInteger(mid) && ((a%3)+(i%3))%2===0 && (Math.floor(a/3)+Math.floor(i/3))%2===0 && !pts.includes(mid)) pts.push(mid); }
-      pts.push(i); } } };
-    let down = false;
-    svg.onpointerdown = ev=>{ down=true; pts.length=0; svg.setPointerCapture(ev.pointerId); hit(loc(ev)); draw(loc(ev)); };
-    svg.onpointermove = ev=>{ if(!down) return; const p=loc(ev); hit(p); draw(p); };
-    svg.onpointerup = svg.onpointercancel = ()=>{ if(!down) return; down=false; draw(); const seq = pts.join('');
-      if(pts.length<4){ if(pts.length) msg('점을 4개 이상 이어주세요', true); pts.length=0; setTimeout(()=>draw(),300); return; }
-      setTimeout(()=>{ pts.length=0; draw(); }, 250); cb(seq); };
+  function patView(title,cb){
+    $('lkTitle').textContent=title; $('lkPatView').classList.remove('hidden'); $('lkPinView').classList.add('hidden');
+    const svg=$('lkPatSvg'), P=[], pts=[]; for(let r=0;r<3;r++) for(let c=0;c<3;c++) P.push([45+c*90,45+r*90]);
+    const draw=cur=>{ let h=P.map(([x,y],i)=>`<circle cx="${x}" cy="${y}" r="${pts.includes(i)?13:8}" fill="${pts.includes(i)?'#E2B95A':'rgba(255,255,255,.45)'}"/>`).join(''); if(pts.length){ const path=pts.map(i=>P[i].join(',')).join(' ')+(cur?' '+cur.join(','):''); h=`<polyline points="${path}" fill="none" stroke="rgba(226,185,90,.85)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>`+h; } svg.innerHTML=h; };
+    const loc=ev=>{ const b=svg.getBoundingClientRect(); return [(ev.clientX-b.left)*270/b.width,(ev.clientY-b.top)*270/b.height]; };
+    const hit=([x,y])=>{ for(let i=0;i<9;i++){ const [px,py]=P[i]; if((px-x)**2+(py-y)**2<1100&&!pts.includes(i)){ if(pts.length){ const a=pts[pts.length-1], mid=(a+i)/2; if(Number.isInteger(mid)&&((a%3)+(i%3))%2===0&&(Math.floor(a/3)+Math.floor(i/3))%2===0&&!pts.includes(mid)) pts.push(mid); } pts.push(i); } } };
+    let down=false;
+    svg.onpointerdown=ev=>{ down=true; pts.length=0; svg.setPointerCapture(ev.pointerId); hit(loc(ev)); draw(loc(ev)); };
+    svg.onpointermove=ev=>{ if(!down) return; const p=loc(ev); hit(p); draw(p); };
+    svg.onpointerup=svg.onpointercancel=()=>{ if(!down) return; down=false; draw(); const seq=pts.join('');
+      if(pts.length<4){ if(pts.length) msg('점을 4개 이상 이어주세요',true); pts.length=0; setTimeout(()=>draw(),300); return; }
+      setTimeout(()=>{ pts.length=0; draw(); },250); cb(seq); };
     draw();
   }
-  function failState(){ const f = lsGet(FAIL)||{n:0,until:0}; return f; }
-  function input(type, len, title, cb){ type==='pin' ? pinView(len, title, cb) : patView(title, cb); }
-  // unlock
-  function requireUnlock(title, after){
+  const input=(type,len,title,cb)=> type==='pin'?pinView(len,title,cb):patView(title,cb);
+  function unlock(title,after){
     if(!cfg){ after(); return; }
-    show(true); msg(cfg.type==='pin' ? '비밀번호를 입력하세요' : '패턴을 그려주세요');
-    actions([['비밀번호를 잊었어요', forgot]]);
-    input(cfg.type, cfg.len, title, async secret=>{
-      const f = failState();
-      if(Date.now() < f.until){ retry(title, after, Math.ceil((f.until-Date.now())/1000)+'초 후에 다시 시도하세요'); return; }
-      const h = await hash(secret, cfg.salt);
-      if(h === cfg.hash){ lsSet(FAIL,{n:0,until:0}); unlocked = true; show(false); after(); }
-      else {
-        f.n++; let t;
-        if(f.n>=5){ f.until = Date.now()+30000; f.n=0; t='5번 틀렸어요. 30초 후에 다시 시도하세요'; }
-        else t='맞지 않아요 ('+f.n+'/5)';
-        lsSet(FAIL,f); retry(title, after, t);
-      }
+    show(true); msg(cfg.type==='pin'?'비밀번호를 입력하세요':'패턴을 그려주세요'); actions([['비밀번호를 잊었어요',forgot]]);
+    input(cfg.type,cfg.len,title,async s=>{
+      const f=lsGet(FAIL)||{n:0,until:0};
+      if(Date.now()<f.until){ retry(title,after,Math.ceil((f.until-Date.now())/1000)+'초 후에 다시 시도하세요'); return; }
+      if(await hash(s,cfg.salt)===cfg.hash){ lsSet(FAIL,{n:0,until:0}); show(false); after(); }
+      else { f.n++; let t; if(f.n>=5){ f.until=Date.now()+30000; f.n=0; t='5번 틀렸어요. 30초 후에 다시 시도하세요'; } else t='맞지 않아요 ('+f.n+'/5)'; lsSet(FAIL,f); retry(title,after,t); }
     });
   }
-  function retry(title, after, t){ requireUnlock(title, after); msg(t, true); }
+  function retry(title,after,t){ unlock(title,after); msg(t,true); }
   function forgot(){
-    msg('잠금을 초기화하면 이 기기에 저장된 장부도 함께 지워져요. 백업 파일이 있다면 나중에 불러올 수 있어요.', true);
-    $('lkPinView').classList.add('hidden'); $('lkPatView').classList.add('hidden'); $('lkTitle').textContent = '잠금 초기화';
-    actions([['취소', ()=>requireUnlock('내 장부', ()=>{}), 'lk-btn alt'], ['데이터 지우고 초기화', ()=>{
-      try{ Object.keys(localStorage).filter(k=>k.startsWith(LS)).forEach(k=>localStorage.removeItem(k)); }catch(e){}
-      cfg = null; cache = {}; unlocked = true; show(false); load(year).then(render); toast('잠금과 이 기기의 데이터를 초기화했어요');
-    }, 'lk-btn']]);
+    msg('잠금을 초기화하면 이 기기에 저장된 장부도 함께 지워져요. 백업 파일이 있으면 나중에 불러올 수 있어요.',true);
+    $('lkPinView').classList.add('hidden'); $('lkPatView').classList.add('hidden'); $('lkTitle').textContent='잠금 초기화';
+    actions([['취소',()=>unlock('내 장부',()=>{}),'lk-btn alt'],['지우고 초기화',()=>{ try{ Object.keys(localStorage).filter(k=>k.startsWith(LS)).forEach(k=>localStorage.removeItem(k)); }catch(e){} cfg=null; cache={}; show(false); load(year).then(renderAll); toast('초기화했어요'); },'lk-btn']]);
   }
-  // setup
   function setup(type){
-    const go = ()=>{
-      first = null; show(true); actions([['취소', ()=>{ show(false); }, 'lk-btn alt']]);
-      const ask = ()=>{
-        msg(type==='pin' ? '새 비밀번호 4~6자리를 누르고 확인' : '새 패턴을 그려주세요 (점 4개 이상)');
-        input(type, 0, type==='pin'?'비밀번호 설정':'패턴 설정', s1=>{
-          first = s1; msg(type==='pin' ? '한 번 더 입력하세요' : '한 번 더 그려주세요');
-          input(type, type==='pin'? s1.length : 0, '확인', async s2=>{
-            if(s1!==s2){ msg('서로 달라요. 처음부터 다시 해주세요', true); setTimeout(ask, 900); return; }
-            const salt = hex(crypto.getRandomValues(new Uint8Array(16)));
-            cfg = {type, len: type==='pin'? s1.length : 0, salt, hash: await hash(s1, salt)};
-            lsSet(KEY, cfg); unlocked = true; show(false); updateLockUi(); toast(type==='pin'?'비밀번호를 설정했어요':'패턴을 설정했어요');
-          });
-        });
-      };
-      ask();
-    };
-    cfg ? requireUnlock('현재 잠금 확인', go) : go();
+    const go=()=>{ show(true); actions([['취소',()=>show(false),'lk-btn alt']]);
+      const ask=()=>{ msg(type==='pin'?'새 비밀번호 4~6자리를 누르고 확인':'새 패턴을 그려주세요 (점 4개 이상)');
+        input(type,0,type==='pin'?'비밀번호 설정':'패턴 설정',s1=>{ msg(type==='pin'?'한 번 더 입력하세요':'한 번 더 그려주세요');
+          input(type,type==='pin'?s1.length:0,'확인',async s2=>{ if(s1!==s2){ msg('서로 달라요. 다시 해주세요',true); setTimeout(ask,900); return; }
+            const salt=hex(crypto.getRandomValues(new Uint8Array(16))); cfg={type,len:type==='pin'?s1.length:0,salt,hash:await hash(s1,salt)}; lsSet(KEY,cfg); show(false); updateLockUi(); toast(type==='pin'?'비밀번호를 설정했어요':'패턴을 설정했어요'); }); }); };
+      ask(); };
+    cfg?unlock('현재 잠금 확인',go):go();
   }
-  function off(){ requireUnlock('현재 잠금 확인', ()=>{ cfg=null; try{ localStorage.removeItem(LS+KEY); }catch(e){} updateLockUi(); toast('잠금을 껐어요'); }); }
-  document.addEventListener('visibilitychange', ()=>{
-    if(document.hidden) hiddenAt = Date.now();
-    else if(cfg && hiddenAt && Date.now()-hiddenAt > 60000){ unlocked=false; requireUnlock('내 장부', ()=>{}); }
-  });
-  return {
-    start(after){ cfg ? requireUnlock('내 장부', after) : (show(false), after()); },
-    setup, off, get on(){ return !!cfg; }, get type(){ return cfg && cfg.type; }
-  };
+  function off(){ unlock('현재 잠금 확인',()=>{ cfg=null; try{ localStorage.removeItem(LS+KEY); }catch(e){} updateLockUi(); toast('잠금을 껐어요'); }); }
+  document.addEventListener('visibilitychange',()=>{ if(document.hidden) hiddenAt=Date.now(); else if(cfg&&hiddenAt&&Date.now()-hiddenAt>60000) unlock('내 장부',()=>{}); });
+  return {start:after=> cfg?unlock('내 장부',after):(show(false),after()), setup, off, get on(){return !!cfg;}, get type(){return cfg&&cfg.type;}};
 })();
-function updateLockUi(){
-  $('lockState').textContent = LOCK.on ? (LOCK.type==='pin'?'숫자 비밀번호로 잠겨 있어요.':'패턴으로 잠겨 있어요.') : '잠금이 꺼져 있어요.';
-  $('lkOff').classList.toggle('hidden', !LOCK.on);
-  $('lkPin').textContent = LOCK.on && LOCK.type==='pin' ? '비밀번호 변경' : '숫자 비밀번호 설정';
-  $('lkPat').textContent = LOCK.on && LOCK.type==='pattern' ? '패턴 변경' : '패턴 설정';
-}
-$('lkPin').onclick = ()=>LOCK.setup('pin');
-$('lkPat').onclick = ()=>LOCK.setup('pattern');
-$('lkOff').onclick = ()=>LOCK.off();
+function updateLockUi(){ $('lockState').textContent = LOCK.on?(LOCK.type==='pin'?'비밀번호로 잠겨 있어요':'패턴으로 잠겨 있어요'):'꺼져 있어요'; $('lkOffRow').classList.toggle('hidden',!LOCK.on); }
+$('lkPin').onclick=()=>LOCK.setup('pin'); $('lkPat').onclick=()=>LOCK.setup('pattern'); $('lkOff').onclick=()=>LOCK.off();
 
-/* ===== PWA (only when hosted on its own site) ===== */
+/* ===== PWA ===== */
 try{ if(!window.claude && 'serviceWorker' in navigator && location.protocol==='https:') navigator.serviceWorker.register('sw.js').catch(()=>{}); }catch(e){}
 
 /* ===== BOOT ===== */
-(async function boot(){
-  renderGuide(); setKind('in');
-  LOCK.start(async ()=>{
-    await load(year); render();
-    try{
-      if(window.claude && typeof window.claude.use==='function'){
-        window.claude.use('downloads').then(x=>{ dl = x; }).catch(()=>{});
-        const [db, user] = await Promise.all([window.claude.use('db'), window.claude.use('user')]);
-        const id = user && typeof user.id==='function' ? await user.id() : null;
-        if(db && id){
-          dbRef = db.collection('data/users/'+id); backend = 'db';
-          await load(year);
-          if(!lastFromDb && yearData(year).entries.length) save();
-          render();
-        }
-      }
-    }catch(e){ backend='local'; }
+(async function(){
+  LOCK.start(async()=>{
+    await load(year); renderAll(); renderToday(); showTab('today');
+    try{ if(window.claude&&typeof window.claude.use==='function'){
+      window.claude.use('downloads').then(x=>{dl=x;}).catch(()=>{});
+      const [db,user]=await Promise.all([window.claude.use('db'),window.claude.use('user')]);
+      const id=user&&typeof user.id==='function'?await user.id():null;
+      if(db&&id){ dbRef=db.collection('data/users/'+id); backend='db'; await load(year); if(!lastFromDb&&yd(year).entries.length) save(); renderAll(); renderToday(); }
+    } }catch(e){ backend='local'; }
   });
 })();
 </script>
