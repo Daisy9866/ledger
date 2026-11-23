@@ -240,8 +240,17 @@ input.tx:focus,.date input:focus{outline:none;border-color:var(--gold)}
 .insight div::before{content:"";position:absolute;left:0;top:8px;width:6px;height:6px;border-radius:50%;background:var(--gold)}
 .quote{font-family:'Noto Serif KR',serif;font-size:15px;line-height:1.7;text-align:center;color:var(--ink)}
 /* tabs */
+.ai-hero{background:linear-gradient(135deg,#1C1C1E,#3A3326);color:#fff}
+.ai-who{display:flex;gap:12px;align-items:center}.ai-who b{display:block;font-size:15px}.ai-who span{font-size:12.5px;opacity:.75}
+.ai-av{flex:none;width:40px;height:40px;border-radius:12px;background:var(--gold);color:#1C1C1E;display:grid;place-items:center;font-weight:800;font-size:13px}
+.ai-list{display:flex;flex-direction:column;gap:10px}
+.ai-it{display:flex;gap:10px;align-items:flex-start}.ai-it i{flex:none;width:22px;height:22px;border-radius:50%;display:grid;place-items:center;font-style:normal;font-size:12px;font-weight:800;color:#fff;background:#9AA1AC;margin-top:1px}
+.ai-it.good i{background:var(--inc)}.ai-it.warn i{background:#E0A23F}.ai-it.bad i{background:var(--exp)}
+.ai-it b{display:block;font-size:14px}.ai-it span{font-size:12.5px;color:var(--sub);line-height:1.55}
+.ai-rates{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}.ai-rates span{font-size:11.5px;background:var(--soft);border-radius:8px;padding:3px 7px;color:var(--sub)}.ai-rates span.n{color:var(--exp)}
+.lgd2{display:flex;flex-wrap:wrap;gap:6px 12px;margin-top:8px;font-size:11.5px;color:var(--sub)}.lgd2 i{display:inline-block;width:9px;height:9px;border-radius:2px;margin-right:4px}
 nav.tabs{position:fixed;left:0;right:0;bottom:0;z-index:10;background:rgba(255,255,255,.94);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom)}
-nav.tabs .in{max-width:520px;margin:0 auto;display:grid;grid-template-columns:repeat(5,1fr)}
+nav.tabs .in{max-width:520px;margin:0 auto;display:grid;grid-template-columns:repeat(6,1fr)}
 nav.tabs button{border:0;background:none;height:58px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;font-size:10.5px;color:var(--mute);font-weight:500}
 nav.tabs button svg{width:22px;height:22px}
 nav.tabs button[aria-selected="true"]{color:var(--ink);font-weight:700}
@@ -389,6 +398,8 @@ nav.tabs button.add svg{width:30px;height:30px;color:var(--gold)}
     <div class="card" style="padding-top:4px" id="listCard"><div id="list"></div></div>
   </section>
 
+  <section id="tab-ai" class="hidden"><div id="aiBody" style="display:flex;flex-direction:column;gap:14px"></div></section>
+
   <!-- ADD -->
   <section id="tab-add" class="hidden">
     <div class="card" style="display:flex;flex-direction:column;gap:18px">
@@ -474,6 +485,7 @@ nav.tabs button.add svg{width:30px;height:30px;color:var(--gold)}
     <button type="button" role="tab" data-tab="home" aria-selected="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7.5" height="9" rx="2"/><rect x="13.5" y="3" width="7.5" height="5" rx="2"/><rect x="13.5" y="11" width="7.5" height="10" rx="2"/><rect x="3" y="15" width="7.5" height="6" rx="2"/></svg>요약</button>
     <button type="button" role="tab" data-tab="add" class="add" aria-selected="false" aria-label="기록"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="11" fill="currentColor"/><path d="M12 7v10M7 12h10" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg></button>
     <button type="button" role="tab" data-tab="list" aria-selected="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 6h13M8 12h13M8 18h13M3.5 6h.01M3.5 12h.01M3.5 18h.01"/></svg>내역</button>
+    <button type="button" role="tab" data-tab="ai" aria-selected="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v3M12 18v3M3 12h3M18 12h3M6.3 6.3l2 2M15.7 15.7l2 2M6.3 17.7l2-2M15.7 8.3l2-2"/><circle cx="12" cy="12" r="3"/></svg>비서</button>
     <button type="button" role="tab" data-tab="set" aria-selected="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 00.3 1.8l.1.1a2 2 0 11-2.8 2.8l-.1-.1a1.7 1.7 0 00-1.8-.3 1.7 1.7 0 00-1 1.5V21a2 2 0 11-4 0v-.1a1.7 1.7 0 00-1.1-1.5 1.7 1.7 0 00-1.8.3l-.1.1a2 2 0 11-2.8-2.8l.1-.1a1.7 1.7 0 00.3-1.8 1.7 1.7 0 00-1.5-1H3a2 2 0 110-4h.1a1.7 1.7 0 001.5-1.1 1.7 1.7 0 00-.3-1.8l-.1-.1a2 2 0 112.8-2.8l.1.1a1.7 1.7 0 001.8.3H9a1.7 1.7 0 001-1.5V3a2 2 0 114 0v.1a1.7 1.7 0 001 1.5 1.7 1.7 0 001.8-.3l.1-.1a2 2 0 112.8 2.8l-.1.1a1.7 1.7 0 00-.3 1.8V9a1.7 1.7 0 001.5 1H21a2 2 0 110 4h-.1a1.7 1.7 0 00-1.5 1z"/></svg>설정</button>
   </div></nav>
 </div>
@@ -1303,8 +1315,82 @@ function setHomeView(v){
 }
 $('homeSeg').addEventListener('click',e=>{ const b=e.target.closest('button'); if(!b) return; setHomeView(b.dataset.v); window.scrollTo(0,0); });
 
+/* ===== AI 비서 ===== */
+const LIFE = ['쇼핑/온라인','편의점/마트','외식/배달','교통/정비','의료/병원','SMS'];
+const CUT = ['쇼핑/온라인','편의점/마트','외식/배달'];   // 줄이기 쉬운 항목
+const VCOL = {'쇼핑/온라인':'#7C6BD6','편의점/마트':'#2E9E8F','외식/배달':'#E08A3C','교통/정비':'#4A7BC8','의료/병원':'#D35C7A','SMS':'#B8B3A8','중국송금':'#C9A227','기타':'#9AA1AC'};
+function aiStats(y){
+  const d=yd(y), M=[...Array(12)].map(()=>({inc:0,pers:0,corp:0,none:0,fix:0,tax:0,life:0,once:0,cat:{},act:false}));
+  for(const e of d.entries){
+    const m=parseInt(e.date.slice(5,7),10)-1; if(m<0) continue; const o=M[m];
+    if(e.k==='in'){ o.inc+=e.net; o.act=true; if(e.kind==='corp') o.corp+=e.net; else if(e.kind==='none') o.none+=e.net; else o.pers+=e.net; }
+    else { if(e.grp==='fixed') o.fix+=e.amt; else if(e.grp==='tax') o.tax+=e.amt;
+      else { o.act=true; o.cat[e.cat]=(o.cat[e.cat]||0)+e.amt; if(LIFE.includes(e.cat)) o.life+=e.amt; else o.once+=e.amt; } }
+  }
+  M.forEach(o=>{ o.out=o.fix+o.tax+o.life+o.once; o.net=o.inc-o.out; });
+  const act=M.map((o,i)=>o.act?i:-1).filter(i=>i>=0);
+  return {M, act, last: act.length? act[act.length-1] : -1};
+}
+const avg=a=>a.length? a.reduce((x,y)=>x+y,0)/a.length : 0;
+function aiInsights(y){
+  const S=aiStats(y), M=S.M, L=S.last, out=[];
+  if(L<0) return {S, items:[], tips:[], budget:[]};
+  const act=S.act, cur=M[L], prev=act.filter(i=>i<L).slice(-3).map(i=>M[i]);
+  const tot=f=>act.reduce((a,i)=>a+f(M[i]),0);
+  const inc=tot(o=>o.inc), outA=tot(o=>o.out), rate=inc? (inc-outA)/inc : 0;
+  // 1) 저축률
+  if(inc){ const r=Math.round(rate*100);
+    out.push(r>=20?{t:'good',h:`올해 저축률 ${r}%`,b:`${act.length}개월 동안 들어온 돈의 ${r}%(${man(inc-outA)}원)가 남았어요.`}
+      : r>=0?{t:'warn',h:`올해 저축률 ${r}%`,b:`들어온 돈 ${man(inc)}원 중 ${man(inc-outA)}원만 남았어요. 보통 20% 이상을 목표로 잡아요.`}
+      :{t:'bad',h:`올해 지출이 수입보다 ${man(outA-inc)}원 많아요`,b:'적자 달을 줄이는 게 먼저예요. 아래 제안을 참고하세요.'}); }
+  const def=act.filter(i=>M[i].net<0); if(def.length) out.push({t:'warn',h:`적자 달 ${def.length}번`,b:def.map(i=>`${i+1}월 −${man(-M[i].net)}`+(M[i].once?` (송금·기타 ${man(M[i].once)})`:'')).join(', ')});
+  // 2) 이번 달 vs 직전 3개월
+  if(prev.length){ const pl=avg(prev.map(o=>o.life));
+    if(pl){ const d=cur.life-pl; out.push({t:d>pl*.15?'warn':d< -pl*.1?'good':'info',h:`${L+1}월 생활비 ${man(cur.life)}원`,b:`직전 ${prev.length}개월 평균 ${man(pl)}원보다 ${d>=0?man(d)+'원 많아요':man(-d)+'원 적어요'}.`}); }
+    for(const c of LIFE){ const pa=avg(prev.map(o=>o.cat[c]||0)), v=cur.cat[c]||0;
+      if(pa>0 && v>pa*1.3 && v-pa>=50000) out.push({t:'warn',h:`${c} ${Math.round((v/pa-1)*100)}% 증가`,b:`${L+1}월 ${man(v)}원 · 평소 ${man(pa)}원. 무엇이 늘었는지 내역에서 확인해 보세요.`}); }
+  }
+  // 3) 생활비 구성 1위
+  const lifeTot={}; for(const i of act) for(const c of LIFE) lifeTot[c]=(lifeTot[c]||0)+(M[i].cat[c]||0);
+  const top=Object.entries(lifeTot).sort((a,b)=>b[1]-a[1])[0];
+  if(top&&top[1]) out.push({t:'info',h:`생활비 1위는 ${top[0]}`,b:`올해 ${man(top[1])}원, 한 달 평균 ${man(top[1]/act.length)}원이에요.`});
+  // 4) 일회성
+  const once=tot(o=>o.once); if(outA&&once/outA>.25) out.push({t:'info',h:`송금·기타가 지출의 ${Math.round(once/outA*100)}%`,b:`중국송금 ${man(tot(o=>o.cat['중국송금']||0))}원, 기타 ${man(tot(o=>o.cat['기타']||0))}원. 기타에 메모를 남기면 분석이 더 정확해져요.`});
+  // 5) 고정비 추세 (통신료)
+  const tel=act.map(i=>yd(y).entries.filter(e=>e.k==='out'&&e.cat==='통신료'&&parseInt(e.date.slice(5,7),10)-1===i).reduce((a,e)=>a+e.amt,0));
+  if(tel.length>=4){ const a=avg(tel.slice(0,Math.ceil(tel.length/2))), b=avg(tel.slice(-2)); if(a&&b>a*1.3) out.push({t:'warn',h:'통신료가 올랐어요',b:`최근 월 ${man(b)}원 · 상반기 평균 ${man(a)}원. 요금제·부가서비스를 점검해 보세요.`}); }
+  const fixAvg=avg(act.map(i=>M[i].fix)); if(fixAvg) out.push({t:'info',h:`고정비 월 ${man(fixAvg)}원`,b:`개인 수입 월평균 ${man(avg(act.map(i=>M[i].pers)))}원 대비 ${avg(act.map(i=>M[i].pers))? Math.round(fixAvg/avg(act.map(i=>M[i].pers))*100):0}%예요.`});
+  // 6) 세금 대비
+  const T=analyze(y).tax.pick; if(T && T.settle>0){ const now=new Date(), left=Math.max(1,(y+1-now.getFullYear())*12+4-now.getMonth()); out.push({t:'info',h:`5월 추가납부 대비 월 ${man(T.settle/left)}원`,b:`예상 추가납부 ${man(T.settle)}원을 내년 5월까지 나눠 모아두면 부담이 줄어요.`}); }
+  else if(T && T.settle<0) out.push({t:'good',h:`5월 환급 예상 ${man(-T.settle)}원`,b:'공제 상세는 요약 탭에서 볼 수 있어요.'});
+  // 제안: 줄이기 쉬운 항목 10%
+  const tips=CUT.map(c=>[c,lifeTot[c]||0]).filter(x=>x[1]).sort((a,b)=>b[1]-a[1]).map(([c,v])=>({c, mon:v/act.length, save:v/act.length*.1*12}));
+  // 다음 달 예산: 최근 3개월 중앙값 × 0.95
+  const rec=act.slice(-3).map(i=>M[i]); const med=a=>{const s=[...a].sort((x,y)=>x-y); return s.length? s[Math.floor(s.length/2)]:0;};
+  const budget=LIFE.filter(c=>c!=='SMS').map(c=>({c, v:Math.round(med(rec.map(o=>o.cat[c]||0))*.95/1e4)*1e4})).filter(x=>x.v>0);
+  return {S, items:out, tips, budget, inc, outA, rate};
+}
+function renderAI(){
+  const R=aiInsights(year), S=R.S, M=S.M, ms=[...Array(12)].map((_,i)=>i+1);
+  if(S.last<0){ $('aiBody').innerHTML='<div class="card"><div class="empty">'+year+'년 기록이 없어 분석할 내용이 없어요</div></div>'; return; }
+  const lab=ms.map(m=>m+'');
+  const ico={good:'✓',warn:'!',bad:'!',info:'i'};
+  const parts=[...LIFE,'중국송금','기타'].map(c=>({name:c,color:VCOL[c],values:M.map(o=>o.cat[c]||0)})).filter(p=>p.values.some(v=>v));
+  const rateLine=M.map(o=>o.inc? Math.round((o.net/o.inc)*100):0);
+  $('aiBody').innerHTML = `
+  <div class="card ai-hero"><div class="ai-who"><span class="ai-av">AI</span><div><b>${year}년 ${S.last+1}월까지 살펴봤어요</b><span>수입 ${man(R.inc)} · 지출 ${man(R.outA)} · 저축률 ${R.inc?Math.round(R.rate*100):0}%</span></div></div></div>
+  <div class="card"><h3>발견한 점 <small>${R.items.length}개</small></h3><div class="ai-list">${R.items.map(x=>`<div class="ai-it ${x.t}"><i>${ico[x.t]}</i><div><b>${esc(x.h)}</b><span>${esc(x.b)}</span></div></div>`).join('')}</div></div>
+  <div class="card"><h3>월별 남은 돈 <small>막대 · 원</small></h3>${barSvg(lab,[{name:'남은 돈',color:'#C08A2E',values:M.map(o=>o.act?o.net:0)}],null,{label:'월별 남은 돈',h:170})}
+    <div class="ai-rates">${M.map((o,i)=>o.act?`<span class="${rateLine[i]<0?'n':''}">${i+1}월 ${rateLine[i]}%</span>`:'').join('')}</div><p class="note">숫자는 그 달 저축률(남은 돈 ÷ 수입)이에요.</p></div>
+  <div class="card"><h3>변동비 항목별 추이</h3>${stackSvg(lab,parts,{label:'변동비 항목별 추이',h:210})}
+    <div class="lgd2">${parts.map(p=>`<span><i style="background:${p.color}"></i>${esc(p.name)}</span>`).join('')}</div></div>
+  <div class="card"><h3>절약 제안 <small>10%만 줄이면</small></h3><div class="lines">${R.tips.map(t=>`<div class="l"><span>${esc(t.c)}<br><span class="muted">지금 월 ${man(t.mon)}원 → ${man(t.mon*.9)}원</span></span><b style="color:var(--inc);white-space:nowrap">연 ${man(t.save)}원</b></div>`).join('')||'<div class="empty">줄일 항목이 아직 없어요</div>'}</div>
+    ${R.tips.length?`<p class="note">셋 다 10%씩 줄이면 1년에 약 ${man(R.tips.reduce((a,t)=>a+t.save,0))}원을 더 모을 수 있어요.</p>`:''}</div>
+  <div class="card"><h3>다음 달 생활비 예산 <small>최근 3개월 기준</small></h3><div class="lines">${R.budget.map(b=>`<div class="l"><span>${esc(b.c)}</span><b>${won(b.v)}</b></div>`).join('')}<div class="l tot"><span>합계</span><span>${won(R.budget.reduce((a,b)=>a+b.v,0))}</span></div></div>
+    <p class="note">최근 3개월 중간값에서 5%를 줄인 금액이에요. 송금·경조사 같은 일회성 지출은 따로 잡으세요.</p></div>`;
+}
 /* ===== TABS ===== */
-const TITLES = {today:'오늘', home:'요약', add:'기록하기', list:'내역', set:'설정'};
+const TITLES = {today:'오늘', home:'요약', add:'기록하기', list:'내역', ai:'AI 비서', set:'설정'};
 let tab='today';
 function showTab(t){
   tab=t;
@@ -1312,11 +1398,12 @@ function showTab(t){
   for(const id of Object.keys(TITLES)) $('tab-'+id).classList.toggle('hidden', id!==t);
   $('ttl').textContent = TITLES[t]; $('yrBox').classList.toggle('hidden', t==='today'||t==='add'||(t==='home'&&homeView==='yr'));
   if(t==='set') fillSet();
+  if(t==='ai') renderAI();
   if(t==='add'){ if(!$('aDate').value) $('aDate').value = year===thisYear? ymd(new Date()) : `${year}-12-31`; renderForm(); }
   window.scrollTo(0,0);
 }
 document.querySelectorAll('nav.tabs button').forEach(b=>b.addEventListener('click',()=>showTab(b.dataset.tab)));
-function renderAll(){ $('yLbl').textContent=year; renderHome(); renderList(); if(homeView==='mon') renderMonthly(); if(homeView==='yr') renderYearly(); }
+function renderAll(){ $('yLbl').textContent=year; renderHome(); renderList(); if(tab==='ai') renderAI(); if(homeView==='mon') renderMonthly(); if(homeView==='yr') renderYearly(); }
 $('yPrev').onclick=async()=>{ year--; selMonth=null; await load(year); renderAll(); if(tab==='set') fillSet(); };
 $('yNext').onclick=async()=>{ year++; selMonth=null; await load(year); renderAll(); if(tab==='set') fillSet(); };
 
