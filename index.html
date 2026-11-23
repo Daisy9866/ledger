@@ -9,7 +9,7 @@
 <meta name="apple-mobile-web-app-title" content="내 장부">
 <title>내 장부</title>
 <link rel="manifest" href="manifest.webmanifest">
-<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="apple-touch-icon" href="icon2-180.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;800&family=Noto+Serif+KR:wght@600;700&display=swap" rel="stylesheet">
 <style>
@@ -79,6 +79,7 @@ section{display:flex;flex-direction:column;gap:14px}
 .lg{display:flex;gap:14px;font-size:11.5px;color:var(--sub);margin-top:10px}
 .lg span::before{content:"";display:inline-block;width:8px;height:8px;border-radius:2px;background:var(--inc);margin-right:5px}
 .lg span.b::before{background:#F0A58E}
+.lg span.ln::before,.lg2 span::before{display:none}
 /* table */
 table.cmp{width:100%;border-collapse:collapse;font-size:13px}
 table.cmp th,table.cmp td{padding:10px 4px;border-bottom:1px solid var(--line);text-align:right}
@@ -208,6 +209,35 @@ input.tx:focus,.date input:focus{outline:none;border-color:var(--gold)}
 .ebar{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-top:14px;text-align:center;font-size:12px}
 .ebar div{border-radius:10px;padding:8px 0}
 .ebar b{display:block;font-size:16px}
+/* analysis */
+.seg3{grid-template-columns:repeat(3,1fr);background:var(--card);box-shadow:var(--sh)}
+.seg3 button[aria-pressed="true"]{background:var(--ink);color:#fff;box-shadow:none}
+.svgc{width:100%;height:auto;display:block;overflow:visible}
+.svgc text{font-family:'Noto Sans KR',sans-serif}
+.mchips{display:grid;grid-template-columns:repeat(6,1fr);gap:6px}
+.mchips button{border:0;background:var(--soft);border-radius:10px;height:38px;font-size:13px;font-weight:700;color:var(--sub)}
+.mchips button[aria-pressed="true"]{background:var(--ink);color:#fff}
+.mchips button.nodata{color:#C7C7CC;font-weight:500}
+.donut{display:grid;grid-template-columns:120px 1fr;gap:16px;align-items:center}
+.donut .lgd{display:flex;flex-direction:column;gap:8px;font-size:13px;min-width:0}
+.donut .lgd div{display:grid;grid-template-columns:10px 1fr auto;gap:8px;align-items:center}
+.donut .lgd i{width:10px;height:10px;border-radius:3px}
+.donut .lgd b{font-weight:700;white-space:nowrap}
+.donut .lgd span{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.delta{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.delta .b{background:var(--soft);border-radius:14px;padding:12px}
+.delta .b .k{font-size:11.5px;color:var(--sub)}
+.delta .b .v{font-size:15px;font-weight:800;margin-top:4px}
+.up{color:var(--exp)} .down{color:var(--inc)} .upg{color:var(--inc)} .downg{color:var(--exp)}
+.tbl{width:100%;border-collapse:collapse;font-size:12.5px}
+.tbl th,.tbl td{padding:8px 3px;text-align:right;border-bottom:1px solid var(--line);white-space:nowrap}
+.tbl th:first-child,.tbl td:first-child{text-align:left}
+.tbl thead th{font-size:11px;color:var(--mute);font-weight:500}
+.tbl tr.sum td{font-weight:800;border-top:1.5px solid var(--ink)}
+.tblw{overflow-x:auto;margin:0 -4px;padding:0 4px}
+.insight{display:flex;flex-direction:column;gap:8px}
+.insight div{font-size:13px;line-height:1.6;padding-left:14px;position:relative}
+.insight div::before{content:"";position:absolute;left:0;top:8px;width:6px;height:6px;border-radius:50%;background:var(--gold)}
 .quote{font-family:'Noto Serif KR',serif;font-size:15px;line-height:1.7;text-align:center;color:var(--ink)}
 /* tabs */
 nav.tabs{position:fixed;left:0;right:0;bottom:0;z-index:10;background:rgba(255,255,255,.94);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom)}
@@ -292,6 +322,14 @@ nav.tabs button.add svg{width:30px;height:30px;color:var(--gold)}
 
   <!-- SUMMARY -->
   <section id="tab-home" class="hidden">
+    <div class="seg seg3" id="homeSeg" role="group" aria-label="보기">
+      <button type="button" data-v="sum" aria-pressed="true">요약</button>
+      <button type="button" data-v="mon" aria-pressed="false">월별 분석</button>
+      <button type="button" data-v="yr" aria-pressed="false">연도별 비교</button>
+    </div>
+    <div id="homeMon" class="hidden" style="display:flex;flex-direction:column;gap:14px"></div>
+    <div id="homeYr" class="hidden" style="display:flex;flex-direction:column;gap:14px"></div>
+    <div id="homeSum" style="display:flex;flex-direction:column;gap:14px">
     <div class="card hero">
       <div class="lb"><span id="hYear"></span><span class="badge" id="hMethod">-</span></div>
       <div class="amt" id="hAmt">-</div>
@@ -326,6 +364,12 @@ nav.tabs button.add svg{width:30px;height:30px;color:var(--gold)}
       <h3>예상 공제 <small>자동 추정</small></h3>
       <div class="lines" id="dedLines"></div>
       <p class="note">급여는 실수령액으로 세전 금액을 추정했고, 지출은 항목별로 업무에 쓰였을 비율을 추정해 반영했어요. 실제 신고 전 홈택스 결과로 확인하세요.</p>
+    </div>
+    <div class="card hidden" id="wdCard">
+      <h3>공제 상세 <small id="wdPeriod"></small></h3>
+      <div class="lines" id="wdLines"></div>
+      <p class="note">중간에 퇴직하면 회사 연말정산에서 카드·보험·의료비 공제가 빠지는 경우가 많아요. 5월 신고 때 추가로 받을 수 있는 금액을 장부 지출로 추정했어요. 공제 대상 여부는 1월 연말정산 간소화 자료로 확인하세요.</p>
+    </div>
     </div>
   </section>
 
@@ -389,6 +433,8 @@ nav.tabs button.add svg{width:30px;height:30px;color:var(--gold)}
       <div class="set-r"><div class="t"><b>내가 직접 낸 국민연금</b><span>올해 지역가입으로 낸 금액 (학교에서 냈다면 0)</span></div><input id="sPen" inputmode="numeric" placeholder="0"></div>
       <div class="set-r"><div class="t"><b>노란우산·기타 공제</b><span>공제받을 금액 합계</span></div><input id="sOD" inputmode="numeric" placeholder="0"></div>
       <div class="set-r"><div class="t"><b>자녀 등 추가 세액공제</b><span>있다면 금액을 넣어주세요</span></div><input id="sCr" inputmode="numeric" placeholder="0"></div>
+      <div class="set-r"><div class="t"><b>체크카드·현금영수증 비율</b><span>근로 기간 카드 사용 중 체크·현금 비율(%). 공제율 30%</span></div><input id="sChk" inputmode="numeric" placeholder="0" style="width:80px"></div>
+      <div class="set-r"><div class="t"><b>월세를 내 명의로 냄</b><span>법인·타인이 내면 월세 공제 대상이 아니에요</span></div><input id="sRent" type="checkbox" style="width:22px;height:22px"></div>
       <div class="set-r"><div class="t"><b>연말까지 더 받을 3.3% 수입</b><span>미리보기에만 반영돼요</span></div><input id="sMore" inputmode="numeric" placeholder="0"></div>
     </div>
     <div class="set-g">
@@ -433,7 +479,7 @@ nav.tabs button.add svg{width:30px;height:30px;color:var(--gold)}
 </div>
 
 <div id="lock" class="hidden" role="dialog" aria-modal="true" aria-labelledby="lkTitle">
-  <img class="logo" src="icon-180.png" alt="">
+  <img class="logo" src="icon2-180.png" alt="">
   <h2 id="lkTitle">내 장부</h2>
   <div class="msg" id="lkMsg" aria-live="polite"></div>
   <div id="lkPinView" class="hidden" style="display:flex;flex-direction:column;align-items:center;gap:24px"><div class="dots" id="lkDots"></div><div class="pad" id="lkPad"></div></div>
@@ -633,7 +679,7 @@ const CATS = {
 };
 const RATE = {}; for(const g in CATS) for(const [c,r] of CATS[g]) RATE[g+'|'+c]=r;
 const IND = {'940903':{rs:61.7,rb:15.4,n:'2024·2025 귀속 고시'},'940100':{rs:64.1,rb:18.4,n:'확인 필요'},'custom':{rs:null,rb:null,n:'신고 안내문 값'}};
-const DEF = {ind:'940903',rs:61.7,rb:15.4,people:1,pensionSelf:0,otherDed:0,credit:0,more:0,ratio:88};
+const DEF = {ind:'940903',rs:61.7,rb:15.4,people:1,pensionSelf:0,otherDed:0,credit:0,more:0,ratio:88,chk:0,rentSelf:0,autoDed:1};
 const LS = 'ledger33:v1:';
 const thisYear = new Date().getFullYear();
 
@@ -698,6 +744,33 @@ function save(y=year){
 
 /* ===== ANALYSIS ===== */
 const isBizIncome = e => e.k==='in' && KIND[e.kind] && KIND[e.kind].tax==='biz';
+/* 근로 기간(급여가 들어온 달까지) 지출로 추정하는 연말정산형 공제 */
+const CARD_CATS = new Set(['var|쇼핑/온라인','var|편의점/마트','var|외식/배달','var|교통/정비','var|의료/병원','fixed|통신료','fixed|렌탈']);
+function wageDeductions(entries, wageGross, st){
+  const R = {on:false, end:null, card:0, cardDed:0, ins:0, insCr:0, med:0, medCr:0, rent:0, rentCr:0, special:0, extra:0};
+  let last = ''; for(const e of entries) if(e.k==='in' && e.kind==='wage' && e.date>last) last = e.date;
+  if(!last || !wageGross || !st.autoDed) return R;
+  R.on = true; R.end = last.slice(0,7);
+  for(const e of entries){
+    if(e.k!=='out' || e.date.slice(0,7) > R.end) continue;
+    const k = e.grp+'|'+e.cat;
+    if(CARD_CATS.has(k)) R.card += e.amt;
+    if(k==='var|의료/병원') R.med += e.amt;
+    if(k==='fixed|보험료') R.ins += e.amt;
+    if(k==='fixed|월세') R.rent += e.amt;
+  }
+  // 카드: 총급여 25% 초과분. 문턱은 신용카드(15%)부터 채워요
+  const T = wageGross*.25, chk = Math.min(1,Math.max(0,(st.chk||0)/100));
+  const ck = R.card*chk, cr = R.card-ck;
+  const over = cr>=T ? (cr-T)*.15 + ck*.3 : Math.max(0, ck-(T-cr))*.3;
+  R.cardDed = Math.floor(Math.min(3e6, over));
+  R.insCr = Math.floor(Math.min(1e6, R.ins)*.12);
+  R.medCr = Math.floor(Math.max(0, R.med - wageGross*.03)*.15);
+  R.rentCr = st.rentSelf && wageGross<=8e7 ? Math.floor(Math.min(1e7, R.rent)*(wageGross<=5.5e7?.17:.15)) : 0;
+  R.special = R.insCr + R.medCr + R.rentCr;
+  R.extra = Math.max(0, R.special - 130000);   // 표준세액공제 13만 원 대신 받을 때만 이득
+  return R;
+}
 function analyze(y){
   const d = yd(y), st = d.settings, ratio = Math.min(.99, Math.max(.5, (st.ratio||88)/100));
   const A = {inNet:0,outAll:0,inM:Array(12).fill(0),outM:Array(12).fill(0),bySrc:{},byKind:{},byGrp:{fixed:0,var:0,tax:0},byCat:{},
@@ -725,8 +798,9 @@ function analyze(y){
   A.prev = prevD ? prevD.entries.filter(isBizIncome).reduce((a,e)=>a+e.gross,0) : 0;
   A.isNew = A.prev===0;
   const more = st.more||0;
+  A.ded = wageDeductions(d.entries, A.wageGross, st);
   A.tax = TAX.compute({wageGross:A.wageGross, bizGross:A.bizGross+more, bizWith:A.bizWith+Math.floor(more*.033), expBook:A.expBook, expMajor:A.expMajor,
-    year:y, people:st.people, pensionSelf:st.pensionSelf, otherDed:st.otherDed, extraCredit:st.credit, rs:st.rs, rb:st.rb, prev:A.prev, isNew:A.isNew});
+    year:y, people:st.people, pensionSelf:st.pensionSelf, otherDed:(st.otherDed||0)+A.ded.cardDed, extraCredit:(st.credit||0)+A.ded.extra, rs:st.rs, rb:st.rb, prev:A.prev, isNew:A.isNew});
   A.more = more;
   return A;
 }
@@ -800,8 +874,22 @@ function renderHome(){
   L.push(['인적공제', 1.5e6*Math.max(1,yd(year).settings.people), (yd(year).settings.people)+'명 × 150만']);
   if(A.wageGross) L.push(['연금·건강보험 공제', Math.floor(A.wageGross*(year>=2026?.0475:.045))+Math.floor(A.wageGross*.0403), '급여에서 낸 보험료 추정']);
   const st = yd(year).settings; if(st.pensionSelf||st.otherDed) L.push(['직접 낸 연금·기타 공제', (st.pensionSelf||0)+(st.otherDed||0), '설정에서 입력']);
+  if(A.ded.cardDed) L.push(['카드 소득공제', A.ded.cardDed, '근로 기간 사용분 · 아래 공제 상세 참고']);
   if(p.calc>0) L.push(['세액공제', p.credit, (A.wageGross?'근로소득세액공제 등':'표준세액공제')]);
   $('dedLines').innerHTML = L.map(([k,v,s])=>`<div class="l"><span>${k}<br><span class="muted">${s}</span></span><b>${won(v)}</b></div>`).join('');
+  const D = A.ded, mEnd = D.end ? parseInt(D.end.slice(5),10) : 0;
+  if(!D.on){ $('wdCard').classList.add('hidden'); }
+  else {
+    $('wdCard').classList.remove('hidden'); $('wdPeriod').textContent = '1~'+mEnd+'월 근로 기간';
+    const rows = [
+      ['카드 소득공제', D.cardDed, `사용 ${man(D.card)} · 문턱(급여 25%) ${man(Math.floor(A.wageGross*.25))}${st.chk?` · 체크·현금 ${st.chk}%`:' · 신용카드 기준'}`],
+      ['보험료 세액공제', D.insCr, `보험료 ${man(D.ins)} × 12% (한도 100만)`],
+      ['의료비 세액공제', D.medCr, D.medCr?`의료비 ${man(D.med)} 중 급여 3% 초과분 × 15%`:`의료비 ${man(D.med)} · 급여 3%(${man(Math.floor(A.wageGross*.03))})를 넘어야 해요`],
+      ['월세 세액공제', D.rentCr, st.rentSelf?`월세 ${man(D.rent)} × ${A.wageGross<=5.5e7?17:15}%`:'본인 명의로 낸 월세만 대상 · 설정에서 변경']
+    ];
+    $('wdLines').innerHTML = rows.map(([k,v,s])=>`<div class="l"><span>${k}<br><span class="muted">${s}</span></span><b style="white-space:nowrap">${v?won(v):'0원'}</b></div>`).join('')
+      + `<div class="l tot"><span>${D.special>130000?'표준공제 13만 원 대신 적용':'표준공제(13만 원)가 더 커서 그대로 적용'}</span><span style="white-space:nowrap">${D.special>130000?'+'+won(D.extra):''}</span></div>`;
+  }
 }
 
 /* ===== RENDER: LIST ===== */
@@ -838,7 +926,7 @@ function renderList(){
 let kind='in', src='school', ikind='biz', basis='gross', cat=null;
 function pickHtml(items, sel){ return items.map(([v,l,dot])=>`<button type="button" data-v="${esc(v)}" aria-pressed="${v===sel}">${dot?`<span class="d" style="background:${dot}"></span>`:''}${esc(l)}</button>`).join(''); }
 function renderForm(){
-  document.querySelectorAll('.seg button').forEach(b=>b.setAttribute('aria-pressed', b.dataset.k===kind));
+  document.querySelectorAll('#tab-add .seg button').forEach(b=>b.setAttribute('aria-pressed', b.dataset.k===kind));
   $('inF').classList.toggle('hidden', kind!=='in'); $('outF').classList.toggle('hidden', kind==='in');
   $('copyFixed').classList.toggle('hidden', kind!=='fixed');
   if(kind==='in'){
@@ -875,7 +963,7 @@ function outCalc(){
   $('outCalc').innerHTML = r>0 ? `<div class="row-b"><span>세금 계산에 반영될 예상 경비</span><b>${won(Math.round(a*r))}</b></div><div class="muted small">${esc(cat)}의 약 ${Math.round(r*100)}%를 업무용으로 추정해 3.3% 소득의 장부 신고 계산에 넣어요</div>`
     : `<div class="row-b"><span>세금 계산 반영</span><b class="muted">없음</b></div><div class="muted small">${kind==='tax'?'세금·이자는 경비로 보지 않아요':'생활비 성격이라 경비로 보지 않아요'}</div>`;
 }
-document.querySelectorAll('.seg button').forEach(b=>b.addEventListener('click',()=>{ kind=b.dataset.k; renderForm(); }));
+document.querySelectorAll('#tab-add .seg button').forEach(b=>b.addEventListener('click',()=>{ kind=b.dataset.k; renderForm(); }));
 $('pSrc').addEventListener('click',e=>{ const b=e.target.closest('button'); if(!b) return; src=b.dataset.v; ikind=SRC[src].kind; renderForm(); });
 $('pKind').addEventListener('click',e=>{ const b=e.target.closest('button'); if(!b) return; ikind=b.dataset.v; renderForm(); });
 $('basisT').addEventListener('click',e=>{ const b=e.target.closest('button'); if(!b) return; basis=b.dataset.b; renderForm(); });
@@ -922,7 +1010,7 @@ function fillSet(){
   $('pV').textContent = st.people||1;
   const f=(id,v)=>{ $(id).value = v? Math.round(v).toLocaleString('ko-KR') : ''; };
   f('sPen',st.pensionSelf); f('sOD',st.otherDed); f('sCr',st.credit); f('sMore',st.more);
-  $('sRatio').value = st.ratio||88; $('aPrev').textContent = won(A.prev); $('aWage').textContent = won(A.wageGross);
+  $('sRatio').value = st.ratio||88; $('sChk').value = st.chk||''; $('sRent').checked = !!st.rentSelf; $('aPrev').textContent = won(A.prev); $('aWage').textContent = won(A.wageGross);
   $('sInd').value = st.ind; $('sRs').value = st.rs; $('sRb').value = st.rb; $('indNote').textContent = (IND[st.ind]||IND.custom).n;
   const pf=lsGet('profile')||{}; $('sBirth').value=pf.birth||''; $('sTime').value=pf.time||'';
   updateLockUi();
@@ -934,7 +1022,7 @@ $('sInd').onchange=()=>{ const p=IND[$('sInd').value]; if(p.rs!=null){ $('sRs').
 $('sSave').onclick=()=>{
   const st = yd(year).settings;
   st.people=+$('pV').textContent; st.pensionSelf=num($('sPen').value); st.otherDed=num($('sOD').value); st.credit=num($('sCr').value); st.more=num($('sMore').value);
-  st.ratio=Math.min(99,Math.max(50,num($('sRatio').value)||88)); st.ind=$('sInd').value; st.rs=num($('sRs').value); st.rb=num($('sRb').value);
+  st.ratio=Math.min(99,Math.max(50,num($('sRatio').value)||88)); st.chk=Math.min(100,Math.max(0,num($('sChk').value)||0)); st.rentSelf=$('sRent').checked?1:0; st.ind=$('sInd').value; st.rs=num($('sRs').value); st.rb=num($('sRb').value);
   const pf={birth:$('sBirth').value||'', time:$('sTime').value||''}; if(pf.birth) lsSet('profile',pf);
   save(); renderAll(); fillSet(); renderToday(); toast('설정을 저장했어요');
 };
@@ -1061,6 +1149,160 @@ $('tarot').onclick=()=>flipCard(false);
 $('goHome').onclick=()=>showTab('home');
 $('pfSave').onclick=()=>{ const b=$('pfBirth').value; if(!b){ toast('생년월일을 넣어주세요'); return; } lsSet('profile',{birth:b,time:$('pfTime').value||''}); renderToday(); toast('사주를 계산했어요'); };
 
+/* ===== ANALYSIS (월별·연도별) ===== */
+let homeView='sum', selMonth=null;
+const CI='#1E9E6A', CE='#E0623F', CN='#1C1C1E';
+const KCOL = {wage:'#3B82C4', biz:'#1E9E6A', free:'#9A7BB8', corp:'#C08A2E', none:'#C7C7CC'};
+function ax(v){ const a=Math.abs(v); if(a>=1e8) return (v/1e8).toFixed(a>=1e9?0:1).replace(/\.0$/,'')+'억'; if(a>=1e4) return Math.round(v/1e4).toLocaleString('ko-KR')+'만'; return String(v); }
+function niceStep(v){ if(v<=0) return 1; const p=Math.pow(10,Math.floor(Math.log10(v))), n=v/p; return (n<=1?1:n<=2?2:n<=2.5?2.5:n<=5?5:10)*p; }
+function scale(min,max){ min=Math.min(0,min); max=Math.max(0,max); if(max===min) max=min+1; const st=niceStep((max-min)/4); const lo=Math.floor(min/st)*st, hi=Math.ceil(max/st)*st; const t=[]; for(let v=lo; v<=hi+st/2; v+=st) t.push(Math.round(v)); return {lo,hi,t}; }
+function niceMax(v){ if(v<=0) return 1; const p=Math.pow(10,Math.floor(Math.log10(v))); const n=v/p; return (n<=1?1:n<=2?2:n<=2.5?2.5:n<=5?5:10)*p; }
+// grouped bars (+ optional line) ; series:[{name,color,values}]
+function barSvg(labels, series, line, opt={}){
+  const W=340,H=opt.h||200,L=40,R=8,T=12,B=24, iw=W-L-R, ih=H-T-B, n=labels.length;
+  const all=[...series.flatMap(s=>s.values), ...(line?line.values:[])];
+  const sc=scale(Math.min(0,...all),Math.max(0,...all)), lo=sc.lo, mx=sc.hi;
+  const y=v=>T+ih-(v-lo)/(mx-lo)*ih;
+  let g='';
+  for(const v of sc.t){ g+=`<line x1="${L}" x2="${W-R}" y1="${y(v)}" y2="${y(v)}" stroke="${v===0?'#C9C6BF':'#EEEBE5'}"/><text x="${L-6}" y="${y(v)+3.5}" font-size="9.5" fill="#8E8E93" text-anchor="end">${ax(v)}</text>`; }
+  const bw = iw/n, sw = Math.min(14,(bw*0.7)/series.length);
+  labels.forEach((lb,i)=>{
+    const cx=L+bw*i+bw/2, x0=cx-sw*series.length/2;
+    series.forEach((s,j)=>{ const v=s.values[i]||0, yy=y(Math.max(0,v)), hh=Math.abs(y(v)-y(0)); g+=`<rect x="${x0+j*sw+0.5}" y="${yy}" width="${sw-1}" height="${Math.max(hh,v?1:0)}" rx="2.5" fill="${s.color}"><title>${lb} ${s.name} ${won(v)}</title></rect>`; });
+    g+=`<text x="${cx}" y="${H-8}" font-size="10" fill="#8E8E93" text-anchor="middle">${lb}</text>`;
+  });
+  if(line){ const pts=line.values.map((v,i)=>`${L+bw*i+bw/2},${y(v)}`).join(' '); g+=`<polyline points="${pts}" fill="none" stroke="${line.color}" stroke-width="2" stroke-linejoin="round"/>`+line.values.map((v,i)=>`<circle cx="${L+bw*i+bw/2}" cy="${y(v)}" r="2.8" fill="#fff" stroke="${line.color}" stroke-width="1.8"><title>${labels[i]} ${line.name} ${won(v)}</title></circle>`).join(''); }
+  return `<svg class="svgc" viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(opt.label||'그래프')}">${g}</svg>`;
+}
+// stacked bars (each label sums parts)
+function stackSvg(labels, parts, opt={}){
+  const W=340,H=opt.h||200,L=40,R=8,T=12,B=24, iw=W-L-R, ih=H-T-B, n=labels.length;
+  const tot=labels.map((_,i)=>parts.reduce((a,p)=>a+(p.values[i]||0),0)); const sc=scale(0,Math.max(1,...tot)), mx=sc.hi;
+  const y=v=>T+ih-v/mx*ih; let g='';
+  for(const v of sc.t){ g+=`<line x1="${L}" x2="${W-R}" y1="${y(v)}" y2="${y(v)}" stroke="#EEEBE5"/><text x="${L-6}" y="${y(v)+3.5}" font-size="9.5" fill="#8E8E93" text-anchor="end">${ax(v)}</text>`; }
+  const bw=iw/n, w=Math.min(34,bw*.62);
+  labels.forEach((lb,i)=>{ let acc=0; const x=L+bw*i+bw/2-w/2;
+    parts.forEach(p=>{ const v=p.values[i]||0; if(!v) return; g+=`<rect x="${x}" y="${y(acc+v)}" width="${w}" height="${y(acc)-y(acc+v)}" fill="${p.color}"><title>${lb} ${p.name} ${won(v)}</title></rect>`; acc+=v; });
+    g+=`<text x="${L+bw*i+bw/2}" y="${y(acc)-4}" font-size="9.5" fill="#1C1C1E" font-weight="700" text-anchor="middle">${acc?ax(acc):''}</text><text x="${L+bw*i+bw/2}" y="${H-8}" font-size="10" fill="#8E8E93" text-anchor="middle">${lb}</text>`; });
+  return `<svg class="svgc" viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(opt.label||'그래프')}">${g}</svg>`;
+}
+function donutSvg(parts){
+  const tot=parts.reduce((a,p)=>a+p.value,0)||1, R=52, r=34, C=60; let a0=-Math.PI/2, g='';
+  if(parts.length===1){ g=`<circle cx="${C}" cy="${C}" r="${(R+r)/2}" fill="none" stroke="${parts[0].color}" stroke-width="${R-r}"/>`; }
+  else parts.forEach(p=>{ const a1=a0+p.value/tot*Math.PI*2, lg=a1-a0>Math.PI?1:0;
+    const P=(rr,a)=>`${C+rr*Math.cos(a)},${C+rr*Math.sin(a)}`;
+    g+=`<path d="M${P(R,a0)} A${R},${R} 0 ${lg} 1 ${P(R,a1)} L${P(r,a1)} A${r},${r} 0 ${lg} 0 ${P(r,a0)}Z" fill="${p.color}"><title>${p.label} ${won(p.value)}</title></path>`; a0=a1; });
+  return `<svg viewBox="0 0 120 120" width="120" height="120" role="img" aria-label="구성 비율">${g}<text x="60" y="58" font-size="10" fill="#8E8E93" text-anchor="middle">합계</text><text x="60" y="73" font-size="13" font-weight="800" fill="#1C1C1E" text-anchor="middle">${ax(tot)}</text></svg>`;
+}
+function donutBlock(parts){
+  parts = parts.filter(p=>p.value>0).sort((a,b)=>b.value-a.value);
+  if(!parts.length) return '<div class="empty">기록이 없어요</div>';
+  const tot=parts.reduce((a,p)=>a+p.value,0);
+  return `<div class="donut">${donutSvg(parts)}<div class="lgd">${parts.map(p=>`<div><i style="background:${p.color}"></i><span>${esc(p.label)}</span><b>${man(p.value)} · ${Math.round(p.value/tot*100)}%</b></div>`).join('')}</div></div>`;
+}
+const pct=(a,b)=> b? Math.round((a-b)/Math.abs(b)*100) : null;
+function deltaHtml(label, cur, base, goodWhenUp){
+  if(base==null || !base) return `<div class="b"><div class="k">${label}</div><div class="v muted" style="font-size:13px">비교 기록 없음</div></div>`;
+  const d=cur-base, p=pct(cur,base), up=d>0, cls = goodWhenUp ? (up?'upg':'downg') : (up?'up':'down');
+  return `<div class="b"><div class="k">${label}</div><div class="v ${d===0?'':cls}">${d===0?'변동 없음':(up?'▲ ':'▼ ')+man(Math.abs(d))+'원'}</div><div class="k" style="margin-top:2px">${p==null?'':(p>0?'+':'')+p+'%'}</div></div>`;
+}
+function monthStats(y,m){
+  if(!cache[y]){ const p=lsGet(y); if(p) cache[y]=p; else return null; }
+  const es=yd(y).entries.filter(e=>parseInt(e.date.slice(5,7),10)===m); if(!es.length) return {inc:0,out:0,src:{},grp:{},cat:{},kind:{},n:0};
+  const S={inc:0,out:0,src:{},grp:{},cat:{},kind:{},n:es.length};
+  for(const e of es){ if(e.k==='in'){ S.inc+=e.net; S.src[e.src]=(S.src[e.src]||0)+e.net; S.kind[e.kind]=(S.kind[e.kind]||0)+e.net; } else { S.out+=e.amt; S.grp[e.grp]=(S.grp[e.grp]||0)+e.amt; const k=e.grp+'|'+e.cat; S.cat[k]=(S.cat[k]||0)+e.amt; } }
+  return S;
+}
+function renderMonthly(){
+  const A=analyze(year), ms=[...Array(12)].map((_,i)=>i+1);
+  if(selMonth==null){ const now=new Date(); selMonth = year===now.getFullYear()? now.getMonth()+1 : 12; while(selMonth>1 && !A.inM[selMonth-1] && !A.outM[selMonth-1]) selMonth--; }
+  const net=A.inM.map((v,i)=>v-A.outM[i]); let cum=0; const cumA=net.map(v=>cum+=v);
+  const S=monthStats(year,selMonth)||{inc:0,out:0,src:{},grp:{},cat:{},n:0};
+  const pm=selMonth===1?12:selMonth-1, py=selMonth===1?year-1:year;
+  const P=monthStats(py,pm), LY=monthStats(year-1,selMonth);
+  const withData=ms.filter(m=>A.inM[m-1]||A.outM[m-1]);
+  const avgOut = withData.length? A.outAll/withData.length : 0;
+  const best = withData.length? withData.reduce((a,m)=>net[m-1]>net[a-1]?m:a, withData[0]) : null;
+  const worst = withData.length? withData.reduce((a,m)=>A.outM[m-1]>A.outM[a-1]?m:a, withData[0]) : null;
+  const cats=Object.entries(S.cat).sort((a,b)=>b[1]-a[1]).slice(0,6); const cmx=Math.max(1,...cats.map(c=>c[1]));
+  $('homeMon').innerHTML = `
+  <div class="card"><h3>${year}년 월별 수입·지출 <small>단위 원</small></h3>
+    ${barSvg(ms.map(m=>m+''), [{name:'수입',color:CI,values:A.inM},{name:'지출',color:'#F0A58E',values:A.outM}], {name:'남은 돈',color:CN,values:net}, {label:'월별 수입 지출 그래프'})}
+    <div class="lg"><span>수입</span><span class="b">지출</span><span class="ln">― 남은 돈</span></div>
+  </div>
+  <div class="card"><h3>누적 잔액 흐름 <small>1월부터 쌓인 남은 돈</small></h3>
+    ${barSvg(ms.map(m=>m+''), [], {name:'누적',color:'#B8862B',values:cumA}, {h:150,label:'누적 잔액 그래프'})}
+  </div>
+  <div class="card"><h3>한눈에 보기</h3><div class="insight">
+    ${withData.length?`<div>기록이 있는 ${withData.length}개월 평균 지출은 <b>${won(avgOut)}</b>이에요.</div>`:''}
+    ${best?`<div>가장 많이 남긴 달은 <b>${best}월</b> (${net[best-1]<0?'−':''}${won(Math.abs(net[best-1]))})이에요.</div>`:''}
+    ${worst?`<div>가장 많이 쓴 달은 <b>${worst}월</b> (${won(A.outM[worst-1])})이에요.</div>`:''}
+    ${withData.length?`<div>올해 저축률(남은 돈 ÷ 수입)은 <b>${A.inNet?Math.round((A.inNet-A.outAll)/A.inNet*100):0}%</b>예요.</div>`:'<div>기록이 없어요.</div>'}
+  </div></div>
+  <div class="card"><h3>월 선택</h3><div class="mchips" id="mchips">${ms.map(m=>`<button type="button" data-m="${m}" aria-pressed="${m===selMonth}" class="${A.inM[m-1]||A.outM[m-1]?'':'nodata'}">${m}월</button>`).join('')}</div></div>
+  <div class="card"><h3>${year}년 ${selMonth}월 <small>${S.n}건</small></h3>
+    <div class="trio"><div class="st"><div class="k">수입</div><div class="v inc">${man(S.inc)}</div></div><div class="st"><div class="k">지출</div><div class="v exp">${man(S.out)}</div></div><div class="st"><div class="k">남은 돈</div><div class="v" style="color:${S.inc-S.out<0?'var(--exp)':'var(--ink)'}">${S.inc-S.out<0?'−':''}${man(Math.abs(S.inc-S.out))}</div></div></div>
+    <div class="delta" style="margin-top:12px">${deltaHtml('지출 · 지난달 대비',S.out,P?P.out:null,false)}${deltaHtml('지출 · 작년 '+selMonth+'월 대비',S.out,LY?LY.out:null,false)}${deltaHtml('수입 · 지난달 대비',S.inc,P?P.inc:null,true)}${deltaHtml('수입 · 작년 '+selMonth+'월 대비',S.inc,LY?LY.inc:null,true)}</div>
+  </div>
+  <div class="card"><h3>${selMonth}월 수입 구성</h3>${donutBlock(Object.entries(S.src).map(([k,v])=>({label:SRC[k].n,value:v,color:SRC[k].c})))}</div>
+  <div class="card"><h3>${selMonth}월 지출 구성</h3>${donutBlock(Object.entries(S.grp).map(([k,v])=>({label:GRP[k].n,value:v,color:GRP[k].c})))}
+    ${cats.length?`<div class="bk" style="margin-top:18px">${cats.map(([k,v])=>{ const [g,c]=k.split('|'); return `<div class="it"><span class="dot" style="background:${GRP[g].c}"></span><div class="nm">${esc(c)}<div style="height:6px;background:var(--soft);border-radius:3px;margin-top:5px;overflow:hidden"><div style="height:100%;width:${v/cmx*100}%;background:${GRP[g].c};opacity:.75"></div></div></div><div class="vl">${won(v)}</div></div>`; }).join('')}</div>`:''}
+  </div>
+  <div class="card"><h3>월별 표</h3><div class="tblw"><table class="tbl"><thead><tr><th>월</th><th>수입</th><th>지출</th><th>남은 돈</th><th>누적</th></tr></thead><tbody>
+    ${ms.map(m=>`<tr><td>${m}월</td><td>${man(A.inM[m-1])}</td><td>${man(A.outM[m-1])}</td><td style="color:${net[m-1]<0?'var(--exp)':'inherit'}">${net[m-1]<0?'−':''}${man(Math.abs(net[m-1]))}</td><td>${cumA[m-1]<0?'−':''}${man(Math.abs(cumA[m-1]))}</td></tr>`).join('')}
+    <tr class="sum"><td>합계</td><td>${man(A.inNet)}</td><td>${man(A.outAll)}</td><td>${A.inNet-A.outAll<0?'−':''}${man(Math.abs(A.inNet-A.outAll))}</td><td></td></tr></tbody></table></div></div>`;
+  $('mchips').onclick=e=>{ const b=e.target.closest('button'); if(!b) return; selMonth=+b.dataset.m; renderMonthly(); };
+}
+function allYears(){ const ys=[]; for(let y=2015;y<=thisYear+1;y++){ if(!cache[y]){ const p=lsGet(y); if(p) cache[y]=p; } if(cache[y] && yd(y).entries.length) ys.push(y); } return ys; }
+function renderYearly(){
+  const ys=allYears();
+  if(!ys.length){ $('homeYr').innerHTML='<div class="card"><div class="empty">기록이 없어요</div></div>'; return; }
+  const As=ys.map(y=>analyze(y)), lb=ys.map(y=>String(y));
+  const inc=As.map(a=>a.inNet), out=As.map(a=>a.outAll), net=As.map(a=>a.inNet-a.outAll);
+  const kinds=Object.keys(KIND).filter(k=>As.some(a=>a.byKind[k]));
+  const months = ys.map((y,i)=>{ const A=As[i]; return Math.max(1, A.inM.concat(A.outM).reduce((n,v,j)=>n,0), A.inM.map((v,j)=>v||A.outM[j]?1:0).reduce((a,b)=>a+b,0)); });
+  const topCats = {}; As.forEach(A=>Object.entries(A.byCat).forEach(([k,v])=>topCats[k]=(topCats[k]||0)+v));
+  const tc = Object.entries(topCats).sort((a,b)=>b[1]-a[1]).slice(0,6).map(x=>x[0]);
+  const rowY=(name,vals,fmt=man,neg)=>`<tr><td>${name}</td>${vals.map(v=>`<td style="${neg&&v<0?'color:var(--exp)':''}">${fmt(v)}</td>`).join('')}</tr>`;
+  const sr = As.map(A=>A.inNet?Math.round((A.inNet-A.outAll)/A.inNet*100):0);
+  const last=As.length-1, prev=last-1;
+  const ins=[];
+  if(prev>=0){
+    const di=pct(inc[last],inc[prev]), dout=pct(out[last],out[prev]);
+    ins.push(`${ys[last]}년 수입은 ${ys[prev]}년보다 <b class="${di>=0?'upg':'downg'}">${di>=0?'+':''}${di}%</b>, 지출은 <b class="${dout>0?'up':'down'}">${dout>=0?'+':''}${dout}%</b>예요.`);
+    for(const g of ['fixed','var','tax']){ const a=As[last].byGrp[g]||0, b=As[prev].byGrp[g]||0; if(b){ const p=pct(a,b); if(Math.abs(p)>=15) ins.push(`${GRP[g].n}가 전년보다 <b class="${p>0?'up':'down'}">${p>0?'+':''}${p}%</b> ${p>0?'늘었어요':'줄었어요'}.`); } }
+  }
+  const bestY = ys[sr.indexOf(Math.max(...sr))]; ins.push(`저축률이 가장 높았던 해는 <b>${bestY}년 (${Math.max(...sr)}%)</b>이에요.`);
+  if(ys.includes(thisYear)) ins.push(`${thisYear}년은 아직 진행 중이라 연간 합계가 더 늘어날 수 있어요.`);
+  $('homeYr').innerHTML = `
+  <div class="card"><h3>연도별 수입·지출</h3>
+    ${barSvg(lb,[{name:'수입',color:CI,values:inc},{name:'지출',color:'#F0A58E',values:out}],{name:'남은 돈',color:CN,values:net},{label:'연도별 수입 지출'})}
+    <div class="lg"><span>수입</span><span class="b">지출</span><span class="ln">― 남은 돈</span></div>
+  </div>
+  <div class="card"><h3>한눈에 보기</h3><div class="insight">${ins.map(t=>`<div>${t}</div>`).join('')}</div></div>
+  <div class="card"><h3>수입 구성 변화 <small>통장 기준</small></h3>
+    ${stackSvg(lb, kinds.map(k=>({name:KIND[k].n,color:KCOL[k],values:As.map(a=>a.byKind[k]||0)})), {label:'연도별 수입 구성'})}
+    <div class="lg lg2" style="flex-wrap:wrap">${kinds.map(k=>`<span style="display:inline-flex;align-items:center;gap:5px"><i style="width:8px;height:8px;border-radius:2px;background:${KCOL[k]};display:inline-block"></i>${KIND[k].n}</span>`).join('')}</div>
+  </div>
+  <div class="card"><h3>지출 구성 변화</h3>
+    ${stackSvg(lb, ['fixed','var','tax'].map(g=>({name:GRP[g].n,color:GRP[g].c,values:As.map(a=>a.byGrp[g]||0)})), {label:'연도별 지출 구성'})}
+    <div class="lg lg2">${['fixed','var','tax'].map(g=>`<span style="display:inline-flex;align-items:center;gap:5px"><i style="width:8px;height:8px;border-radius:2px;background:${GRP[g].c};display:inline-block"></i>${GRP[g].n}</span>`).join('')}</div>
+  </div>
+  <div class="card"><h3>연도별 표</h3><div class="tblw"><table class="tbl"><thead><tr><th></th>${lb.map(y=>`<th>${y}</th>`).join('')}</tr></thead><tbody>
+    ${rowY('수입',inc)}${rowY('지출',out)}${rowY('남은 돈',net,v=>(v<0?'−':'')+man(Math.abs(v)),true)}${rowY('저축률',sr,v=>v+'%',true)}
+    ${rowY('고정비',As.map(a=>a.byGrp.fixed||0))}${rowY('변동비',As.map(a=>a.byGrp.var||0))}${rowY('세금·이자',As.map(a=>a.byGrp.tax||0))}
+    ${rowY('월평균 지출',As.map((a,i)=>a.outAll/months[i]))}
+    ${tc.map(k=>rowY(esc(k.split('|')[1]),As.map(a=>a.byCat[k]||0))).join('')}
+  </tbody></table></div><p class="note">월평균 지출은 기록이 있는 달 수로 나눴어요.</p></div>`;
+}
+function setHomeView(v){
+  homeView=v; document.querySelectorAll('#homeSeg button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.v===v));
+  $('homeSum').classList.toggle('hidden',v!=='sum'); $('homeMon').classList.toggle('hidden',v!=='mon'); $('homeYr').classList.toggle('hidden',v!=='yr');
+  $('yrBox').classList.toggle('hidden', v==='yr');
+  if(v==='mon') renderMonthly(); if(v==='yr') renderYearly();
+}
+$('homeSeg').addEventListener('click',e=>{ const b=e.target.closest('button'); if(!b) return; setHomeView(b.dataset.v); window.scrollTo(0,0); });
+
 /* ===== TABS ===== */
 const TITLES = {today:'오늘', home:'요약', add:'기록하기', list:'내역', set:'설정'};
 let tab='today';
@@ -1068,15 +1310,15 @@ function showTab(t){
   tab=t;
   document.querySelectorAll('nav.tabs button').forEach(b=>b.setAttribute('aria-selected', b.dataset.tab===t));
   for(const id of Object.keys(TITLES)) $('tab-'+id).classList.toggle('hidden', id!==t);
-  $('ttl').textContent = TITLES[t]; $('yrBox').classList.toggle('hidden', t==='today'||t==='add');
+  $('ttl').textContent = TITLES[t]; $('yrBox').classList.toggle('hidden', t==='today'||t==='add'||(t==='home'&&homeView==='yr'));
   if(t==='set') fillSet();
   if(t==='add'){ if(!$('aDate').value) $('aDate').value = year===thisYear? ymd(new Date()) : `${year}-12-31`; renderForm(); }
   window.scrollTo(0,0);
 }
 document.querySelectorAll('nav.tabs button').forEach(b=>b.addEventListener('click',()=>showTab(b.dataset.tab)));
-function renderAll(){ $('yLbl').textContent=year; renderHome(); renderList(); }
-$('yPrev').onclick=async()=>{ year--; await load(year); renderAll(); if(tab==='set') fillSet(); };
-$('yNext').onclick=async()=>{ year++; await load(year); renderAll(); if(tab==='set') fillSet(); };
+function renderAll(){ $('yLbl').textContent=year; renderHome(); renderList(); if(homeView==='mon') renderMonthly(); if(homeView==='yr') renderYearly(); }
+$('yPrev').onclick=async()=>{ year--; selMonth=null; await load(year); renderAll(); if(tab==='set') fillSet(); };
+$('yNext').onclick=async()=>{ year++; selMonth=null; await load(year); renderAll(); if(tab==='set') fillSet(); };
 
 /* ===== LOCK ===== */
 const LOCK=(function(){
